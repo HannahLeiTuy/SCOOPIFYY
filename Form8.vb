@@ -1,7 +1,12 @@
 ﻿Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports MySql.Data.MySqlClient
+Imports iTextSharp.text
+Imports iTextSharp.text.pdf
+Imports System.IO
+Imports System.Diagnostics
+
 Public Class Form8
-    Dim connString As String = "server=localhost;database=Scoopify_Creamery;user=root;password=Hannah_lei07;"
+    Dim connString As String = "server=localhost;database=Scoopify_Creamery;user=root;password=BugfixMaster#22;"
     Dim QuestionNo As Integer = 0
     Dim Tropical As Integer = 0
     Dim Caramel As Integer = 0
@@ -11,10 +16,138 @@ Public Class Form8
     Dim SelectedTopping As String = ""
     Dim SelectedSyrup As String = ""
     Dim DisplayName As String = ""
+
+    Private Sub GenerateQuizPDF()
+
+        Dim total As Decimal = GetQuizTotal()
+
+        Dim savePath As String =
+        Application.StartupPath & "\DessertPersonalityReport.pdf"
+
+        Dim doc As New iTextSharp.text.Document(
+        iTextSharp.text.PageSize.A4,
+        40,
+        40,
+        50,
+        50)
+
+        Dim writer As iTextSharp.text.pdf.PdfWriter =
+        iTextSharp.text.pdf.PdfWriter.GetInstance(
+            doc,
+            New System.IO.FileStream(
+                savePath,
+                System.IO.FileMode.Create))
+
+        doc.Open()
+
+        Dim titleFont As New iTextSharp.text.Font(
+        iTextSharp.text.Font.FontFamily.HELVETICA,
+        24,
+        iTextSharp.text.Font.BOLD)
+
+        Dim headerFont As New iTextSharp.text.Font(
+        iTextSharp.text.Font.FontFamily.HELVETICA,
+        16,
+        iTextSharp.text.Font.BOLD)
+
+        Dim normalFont As New iTextSharp.text.Font(
+        iTextSharp.text.Font.FontFamily.HELVETICA,
+        12,
+        iTextSharp.text.Font.NORMAL)
+
+        Dim title As New iTextSharp.text.Paragraph(
+        "SCOOPIFY CREAMERY" &
+        vbCrLf &
+        "Dessert Personality Quiz Report",
+        titleFont)
+
+        title.Alignment = iTextSharp.text.Element.ALIGN_CENTER
+
+        doc.Add(title)
+
+        doc.Add(New iTextSharp.text.Paragraph(" "))
+        doc.Add(New iTextSharp.text.Paragraph(
+        "Date Generated: " &
+        DateTime.Now.ToString("MMMM dd, yyyy hh:mm tt"),
+        normalFont))
+
+        doc.Add(New iTextSharp.text.Paragraph(" "))
+
+        doc.Add(New iTextSharp.text.Paragraph(
+        "Recommended Dessert",
+        headerFont))
+
+        doc.Add(New iTextSharp.text.Paragraph(
+        DisplayName,
+        normalFont))
+
+        doc.Add(New iTextSharp.text.Paragraph(" "))
+
+        Dim table As New iTextSharp.text.pdf.PdfPTable(2)
+
+        table.WidthPercentage = 100
+
+        table.AddCell("Flavor")
+        table.AddCell(SelectedFlavor)
+
+        table.AddCell("Container")
+        table.AddCell(SelectedContainer)
+
+        table.AddCell("Topping")
+        table.AddCell(SelectedTopping)
+
+        table.AddCell("Syrup")
+        table.AddCell(SelectedSyrup)
+
+        table.AddCell("Total Amount")
+        table.AddCell("₱" & total.ToString("0.00"))
+
+        doc.Add(table)
+
+        doc.Add(New iTextSharp.text.Paragraph(" "))
+        doc.Add(New iTextSharp.text.Paragraph(
+        "══════════════════════════════",
+        normalFont))
+
+        doc.Add(New iTextSharp.text.Paragraph(
+        "Thank you for choosing Scoopify Creamery!",
+        headerFont))
+
+        doc.Add(New iTextSharp.text.Paragraph(
+        "Your personalized dessert recommendation was generated based on your personality quiz answers.",
+        normalFont))
+
+        doc.Add(New iTextSharp.text.Paragraph(" "))
+        doc.Add(New iTextSharp.text.Paragraph(
+        "Enjoy your Scoopify experience!",
+        normalFont))
+
+        doc.Close()
+
+        Process.Start(New ProcessStartInfo(savePath) With {
+    .UseShellExecute = True
+})
+
+    End Sub
+
+
+
+    Private Function GetQuizTotal() As Decimal
+
+        Dim total As Decimal = 0
+
+        total += GetPrice(SelectedFlavor)
+        total += GetPrice(SelectedContainer)
+        total += GetPrice(SelectedTopping)
+        total += GetPrice(SelectedSyrup)
+
+        Return total
+
+    End Function
     Private Sub Form8_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Button1.Enabled = False
         RichTextBox1.ReadOnly = True
-        RichTextBox1.Font = New Font("Georgia", 10, FontStyle.Regular)
+        RichTextBox1.Font = New Drawing.Font("Georgia", 10, Drawing.FontStyle.Regular)
         LoadQuestion()
     End Sub
     Private Sub LoadQuestion()
@@ -205,19 +338,35 @@ D. A relaxing spa day"
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+
         SaveQuizRecommendation()
 
+        Dim total As Decimal = GetQuizTotal()
+
+        Dim orderText As String =
+    DisplayName &
+    " | Flavor: " & SelectedFlavor &
+    " | Container: " & SelectedContainer &
+    " | Topping: " & SelectedTopping &
+    " | Syrup: " & SelectedSyrup &
+    " | Total: ₱" & total.ToString("0.00")
+
+        Form12.CheckedListBox1.Items.Add(orderText)
+
+        Form12.UpdateOrderSummary()
+
         MessageBox.Show(
-        "🛒 ADDED TO ORDER!" & vbCrLf &
-        "Recommendation: " & DisplayName & vbCrLf & vbCrLf &
-        "Flavor: " & SelectedFlavor & vbCrLf &
-        "Container: " & SelectedContainer & vbCrLf &
-        "Topping: " & SelectedTopping & vbCrLf &
-        "Syrup: " & SelectedSyrup & vbCrLf & vbCrLf &
-        "Thank you for choosing Scoopify!",
-        "Order Successful",
-        MessageBoxButtons.OK,
-        MessageBoxIcon.Information)
+    "🛒 ADDED TO ORDER!" & vbCrLf &
+    "Recommendation: " & DisplayName & vbCrLf & vbCrLf &
+    "Flavor: " & SelectedFlavor & vbCrLf &
+    "Container: " & SelectedContainer & vbCrLf &
+    "Topping: " & SelectedTopping & vbCrLf &
+    "Syrup: " & SelectedSyrup & vbCrLf & vbCrLf &
+    "Thank you for choosing Scoopify!",
+    "Order Successful",
+    MessageBoxButtons.OK,
+    MessageBoxIcon.Information)
+
     End Sub
 
     Private Sub SaveQuizRecommendation()
@@ -278,6 +427,28 @@ D. A relaxing spa day"
     Private Sub Button10_Click(sender As Object, e As EventArgs) Handles Button10.Click
         Form10.Show()
         Me.Hide()
+    End Sub
+
+    Private Sub Button13_Click(sender As Object, e As EventArgs) Handles Button13.Click
+
+        If DisplayName = "" Then
+            MessageBox.Show(
+            "Please complete the quiz first before generating a report.",
+            "Quiz Not Completed",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Warning)
+
+            Exit Sub
+        End If
+
+        GenerateQuizPDF()
+
+        MessageBox.Show(
+        "PDF report generated successfully!",
+        "Report Generated",
+        MessageBoxButtons.OK,
+        MessageBoxIcon.Information)
+
     End Sub
 End Class
 

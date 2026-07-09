@@ -26,6 +26,7 @@ Partial Class Form3
         DataGridView1 = New DataGridView()
         Button1 = New Button()
         Button2 = New Button()
+        Button3 = New Button()
         CType(DataGridView1, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
@@ -41,7 +42,7 @@ Partial Class Form3
         ' 
         ' Button1
         ' 
-        Button1.Location = New Point(417, 358)
+        Button1.Location = New Point(112, 652)
         Button1.Name = "Button1"
         Button1.Size = New Size(94, 29)
         Button1.TabIndex = 1
@@ -57,6 +58,15 @@ Partial Class Form3
         Button2.Text = "Button2"
         Button2.UseVisualStyleBackColor = True
         ' 
+        ' Button3
+        ' 
+        Button3.Location = New Point(1232, 832)
+        Button3.Name = "Button3"
+        Button3.Size = New Size(195, 29)
+        Button3.TabIndex = 3
+        Button3.Text = "Generate Inventory Report"
+        Button3.UseVisualStyleBackColor = True
+        ' 
         ' Form3
         ' 
         AutoScaleDimensions = New SizeF(8F, 20F)
@@ -64,6 +74,7 @@ Partial Class Form3
         BackgroundImage = CType(resources.GetObject("$this.BackgroundImage"), Image)
         BackgroundImageLayout = ImageLayout.Stretch
         ClientSize = New Size(1599, 894)
+        Controls.Add(Button3)
         Controls.Add(Button2)
         Controls.Add(Button1)
         Controls.Add(DataGridView1)
@@ -76,4 +87,5 @@ Partial Class Form3
     Friend WithEvents DataGridView1 As DataGridView
     Friend WithEvents Button1 As Button
     Friend WithEvents Button2 As Button
+    Friend WithEvents Button3 As Button
 End Class

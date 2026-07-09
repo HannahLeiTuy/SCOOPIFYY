@@ -181,7 +181,6 @@ Public Class Form2
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        TextBox2.UseSystemPasswordChar = Not TextBox2.UseSystemPasswordChar
         Form10.Show()
         Me.Hide()
 
@@ -238,6 +237,11 @@ Public Class Form2
     Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
         Form6.Show()
         Me.Hide()
+    End Sub
+
+    Private Sub Button11_Click(sender As Object, e As EventArgs) Handles Button11.Click
+        TextBox2.UseSystemPasswordChar = Not TextBox2.UseSystemPasswordChar
+
     End Sub
 End Class
 

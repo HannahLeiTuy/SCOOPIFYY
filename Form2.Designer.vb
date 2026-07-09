@@ -38,6 +38,7 @@ Partial Class Form2
         Button9 = New Button()
         ComboBox1 = New ComboBox()
         Button10 = New Button()
+        Button11 = New Button()
         SuspendLayout()
         ' 
         ' TextBox1
@@ -167,13 +168,23 @@ Partial Class Form2
         Button10.Text = "    "
         Button10.UseVisualStyleBackColor = True
         ' 
+        ' Button11
+        ' 
+        Button11.Location = New Point(626, 600)
+        Button11.Name = "Button11"
+        Button11.Size = New Size(38, 32)
+        Button11.TabIndex = 18
+        Button11.Text = "Button11"
+        Button11.UseVisualStyleBackColor = True
+        ' 
         ' Form2
         ' 
-        AutoScaleDimensions = New SizeF(8F, 20F)
+        AutoScaleDimensions = New SizeF(8.0F, 20.0F)
         AutoScaleMode = AutoScaleMode.Font
         BackgroundImage = CType(resources.GetObject("$this.BackgroundImage"), Image)
         BackgroundImageLayout = ImageLayout.Stretch
         ClientSize = New Size(1600, 862)
+        Controls.Add(Button11)
         Controls.Add(Button10)
         Controls.Add(ComboBox1)
         Controls.Add(Button9)
@@ -207,4 +218,5 @@ Partial Class Form2
     Friend WithEvents Button9 As Button
     Friend WithEvents ComboBox1 As ComboBox
     Friend WithEvents Button10 As Button
+    Friend WithEvents Button11 As Button
 End Class

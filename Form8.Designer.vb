@@ -37,6 +37,7 @@ Partial Class Form8
         Button10 = New Button()
         Button11 = New Button()
         Button12 = New Button()
+        Button13 = New Button()
         SuspendLayout()
         ' 
         ' RichTextBox1
@@ -177,13 +178,23 @@ Partial Class Form8
         Button12.Text = "    "
         Button12.UseVisualStyleBackColor = True
         ' 
+        ' Button13
+        ' 
+        Button13.Location = New Point(549, 801)
+        Button13.Name = "Button13"
+        Button13.Size = New Size(141, 29)
+        Button13.TabIndex = 37
+        Button13.Text = "Generate Report"
+        Button13.UseVisualStyleBackColor = True
+        ' 
         ' Form8
         ' 
-        AutoScaleDimensions = New SizeF(8F, 20F)
+        AutoScaleDimensions = New SizeF(8.0F, 20.0F)
         AutoScaleMode = AutoScaleMode.Font
         BackgroundImage = CType(resources.GetObject("$this.BackgroundImage"), Image)
         BackgroundImageLayout = ImageLayout.Stretch
         ClientSize = New Size(1670, 892)
+        Controls.Add(Button13)
         Controls.Add(Button12)
         Controls.Add(Button8)
         Controls.Add(Button7)
@@ -217,4 +228,5 @@ Partial Class Form8
     Friend WithEvents Button10 As Button
     Friend WithEvents Button11 As Button
     Friend WithEvents Button12 As Button
+    Friend WithEvents Button13 As Button
 End Class

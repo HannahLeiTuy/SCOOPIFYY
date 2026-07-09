@@ -79,6 +79,16 @@
 
         If answer = DialogResult.Yes Then
 
+            Dim orderText As String =
+        currentName &
+        " | Mystery Flavor" &
+        " | Total: ₱" &
+        currentPrice.ToString("0.00")
+
+            Form12.CheckedListBox1.Items.Add(orderText)
+
+            Form12.UpdateOrderSummary()
+
             ListBox1.Items.Clear()
 
             ListBox1.Items.Add("🎉 Added!")
@@ -86,7 +96,7 @@
             ListBox1.Items.Add("🍦 " & currentName)
             ListBox1.Items.Add("💰 ₱" & currentPrice.ToString("0.00"))
             ListBox1.Items.Add("")
-            ListBox1.Items.Add("Thanks for choosing")
+            ListBox1.Items.Add("Added to Cart Successfully!")
             ListBox1.Items.Add("✨ Scoopify! 🍨")
 
             Button3.Enabled = False

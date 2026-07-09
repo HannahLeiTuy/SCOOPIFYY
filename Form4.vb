@@ -1,9 +1,89 @@
 ﻿Imports MySql.Data.MySqlClient
+Imports iTextSharp.text
+Imports iTextSharp.text.pdf
+Imports System.Diagnostics
+Imports System.IO
 
 Public Class Form4
-    Dim connString As String = "server=localhost;database=Scoopify_Creamery;user=root;password=Hannah_lei07;"
+    Dim connString As String = "server=localhost;database=Scoopify_Creamery;user=root;password=BugfixMaster#22;"
     Dim total As Decimal = 0
     Private OrderList As New List(Of OrderItem)
+
+    Private Sub GeneratePDFReceipt()
+
+        Dim savePath As String =
+        Application.StartupPath &
+        "\BuildYourOwnReceipt.pdf"
+
+        Dim doc As New Document(PageSize.A4)
+
+        PdfWriter.GetInstance(
+        doc,
+        New FileStream(savePath, FileMode.Create))
+
+        doc.Open()
+
+        ' Title
+        Dim titleFont As Font =
+        FontFactory.GetFont(
+            FontFactory.HELVETICA_BOLD,
+            20)
+
+        Dim normalFont As Font =
+        FontFactory.GetFont(
+            FontFactory.HELVETICA,
+            12)
+
+        doc.Add(New Paragraph(
+        "SCOOPIFY CREAMERY",
+        titleFont))
+
+        doc.Add(New Paragraph(
+        "Build Your Own Dessert Receipt",
+        normalFont))
+
+        doc.Add(New Paragraph(
+        "Date: " &
+        DateTime.Now.ToString()))
+
+        doc.Add(New Paragraph(
+        "-------------------------------------"))
+
+        doc.Add(New Paragraph(""))
+
+        ' Orders
+        For Each item In ListBox2.Items
+            doc.Add(New Paragraph(
+            item.ToString(),
+            normalFont))
+        Next
+
+        doc.Add(New Paragraph(""))
+
+        doc.Add(New Paragraph(
+        "-------------------------------------"))
+
+        doc.Add(New Paragraph(
+        "TOTAL AMOUNT: ₱" &
+        total.ToString("0.00"),
+        titleFont))
+
+        doc.Add(New Paragraph(""))
+        doc.Add(New Paragraph(
+        "Thank you for choosing Scoopify! 🍦",
+        normalFont))
+
+        doc.Close()
+        Process.Start(New ProcessStartInfo(savePath) With {
+    .UseShellExecute = True
+})
+        MessageBox.Show(
+    "Receipt generated successfully and opened automatically!",
+    "PDF Receipt",
+    MessageBoxButtons.OK,
+    MessageBoxIcon.Information)
+
+    End Sub
 
     Public Class OrderItem
         Public ProductID As Integer
@@ -119,27 +199,27 @@ Public Class Form4
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         Dim price As Decimal = 0
-        Dim description As String = ""
+        Dim description = ""
         Dim qty As Integer = NumericUpDown1.Value
 
         For Each item In CheckedListBox1.CheckedItems
-            price += GetPrice(item.ToString())
-            description &= item.ToString() & ", "
+            price += GetPrice(item.ToString)
+            description &= item.ToString & ", "
         Next
 
         For Each item In CheckedListBox2.CheckedItems
-            price += GetPrice(item.ToString())
-            description &= item.ToString() & ", "
+            price += GetPrice(item.ToString)
+            description &= item.ToString & ", "
         Next
 
         For Each item In CheckedListBox3.CheckedItems
-            price += GetPrice(item.ToString())
-            description &= item.ToString() & ", "
+            price += GetPrice(item.ToString)
+            description &= item.ToString & ", "
         Next
 
         For Each item In CheckedListBox4.CheckedItems
-            price += GetPrice(item.ToString())
-            description &= item.ToString() & ", "
+            price += GetPrice(item.ToString)
+            description &= item.ToString & ", "
         Next
 
         If description = "" Then
@@ -149,6 +229,13 @@ Public Class Form4
 
         description = description.TrimEnd(","c, " "c)
         ListBox2.Items.Add(description & " | Qty: " & qty & " | Total: ₱" & price * qty)
+        Form12.CheckedListBox1.Items.Add(
+    description & " | Qty: " &
+    qty &
+    " | Total: ₱" &
+    price * qty)
+
+        Form12.UpdateOrderSummary()
         total += price * qty
         Label1.Text = "Total: ₱" & total
 
@@ -184,25 +271,22 @@ Public Class Form4
             conn.Open()
 
             Dim cmdTrans As New MySqlCommand(
-            "INSERT INTO transactions (customer_id, employee_id, total_amount, payment_method)
-             VALUES (1, 3, @total, 'Cash')", conn)
+        "INSERT INTO transactions (customer_id, employee_id, total_amount, payment_method)
+         VALUES (1, 3, @total, 'Cash')", conn)
+
             cmdTrans.Parameters.AddWithValue("@total", total)
             cmdTrans.ExecuteNonQuery()
+
             Dim transactionID As Integer = cmdTrans.LastInsertedId
+
             SaveItems(conn, transactionID)
         End Using
-        MessageBox.Show(
-        "Flavor: " & CheckedListBox1.CheckedItems.Count & vbCrLf &
-        "Container: " & CheckedListBox2.CheckedItems.Count & vbCrLf &
-        "Topping: " & CheckedListBox3.CheckedItems.Count & vbCrLf &
-        "Syrup: " & CheckedListBox4.CheckedItems.Count)
-        Dim message = "Order confirmed!" &
-                        vbCrLf
-        message &= "" & vbCrLf & "Total: ₱ " & total
-        MessageBox.Show(message)
-        Button3_Click(sender, e)
 
-        ClearOrder()
+        Dim message = "Order confirmed!" &
+                    vbCrLf
+        message &= "" & vbCrLf & "Total: ₱ " & total
+
+        MessageBox.Show(message)
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
@@ -299,6 +383,32 @@ Public Class Form4
     End Sub
 
     Private Sub Button10_Click(sender As Object, e As EventArgs) Handles Button10.Click
+
+    End Sub
+
+    Private Sub Button15_Click(sender As Object, e As EventArgs) Handles Button15.Click
+        Form12.Show()
+        Me.Hide()
+    End Sub
+
+    Private Sub Button16_Click(sender As Object, e As EventArgs) Handles Button16.Click
+
+        If ListBox2.Items.Count = 0 Then
+            MessageBox.Show(
+            "Please add an order first before generating a receipt.",
+            "No Order Found",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Warning)
+
+            Exit Sub
+        End If
+
+        GeneratePDFReceipt()
+        ClearOrder()
+
+    End Sub
+
+    Private Sub CheckedListBox3_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CheckedListBox3.SelectedIndexChanged
 
     End Sub
 End Class

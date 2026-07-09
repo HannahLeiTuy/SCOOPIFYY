@@ -3,7 +3,7 @@ Imports MySql.Data.MySqlClient
 Public Class Form7
     Private currentMood As String = ""
     Private orderTotal As Double = 0
-    Dim connString As String = "server=localhost;database=Scoopify_Creamery;user=root;password=Hannah_lei07;"
+    Dim connString As String = "server=localhost;database=Scoopify_Creamery;user=root;password=BugfixMaster#22;"
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         ListBox1.Visible = True
         ListBox2.Visible = True
@@ -52,7 +52,7 @@ Public Class Form7
 
                 ListBox1.Items.Add("   " & SafeTag(False, False, False, False) & "  Mango Sorbet - ₱65")
 
-                ListBox1.Items.Add("   " & SafeTag(False, False, hasGluten, hasEgg) &
+                ListBox1.Items.Add("   " & SafeTag(hasDairy, False, hasGluten, hasEgg) &
                                    "  Strawberry - ₱85" &
                                    AllergenList(hasDairy, False, hasGluten, hasEgg))
 
@@ -201,8 +201,7 @@ Public Class Form7
             Return "✅"
         End If
     End Function
-    Private Function AllergenList(dairy As Boolean, nuts As Boolean,
-                                  gluten As Boolean, egg As Boolean) As String
+    Private Function AllergenList(dairy As Boolean, nuts As Boolean, gluten As Boolean, egg As Boolean) As String
         Dim found As New List(Of String)
         If dairy Then found.Add("Dairy")
         If nuts Then found.Add("Nuts")
@@ -227,42 +226,57 @@ Public Class Form7
         End If
     End Sub
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+
         If ListBox1.SelectedIndex = -1 Then
             MessageBox.Show("Please select a flavor first.")
             Exit Sub
         End If
 
-        Dim selectedItem As String = ListBox1.SelectedItem.ToString().Trim()
+        Dim selectedItem As String =
+        ListBox1.SelectedItem.ToString().Trim()
 
-        If selectedItem.StartsWith("✅") Then
-            ListBox2.Items.Add(selectedItem)
-            Dim priceText As String = selectedItem.Substring(selectedItem.IndexOf("₱"c) + 1)
-            Dim price As Double = Val(priceText)
-            orderTotal += price
-
-            MessageBox.Show(selectedItem & " added!" & Environment.NewLine &
-                         "Current Total: ₱" & orderTotal)
-
-        ElseIf selectedItem.StartsWith("⚠️") Then
-            Dim answer As DialogResult = MessageBox.Show(
-            "This flavor contains an allergen you filtered for. Add it anyway?",
-            "Allergy Warning",
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Warning)
-
-            If answer = DialogResult.Yes Then
-                ListBox2.Items.Add(selectedItem)
-
-                Dim priceText As String = selectedItem.Substring(selectedItem.IndexOf("₱"c) + 1)
-                Dim price As Double = Val(priceText)
-                orderTotal += price
-
-                MessageBox.Show(selectedItem & " added!" & Environment.NewLine &
-                             "Current Total: ₱" & orderTotal)
-            End If
-        Else
-            MessageBox.Show("Please select an actual flavor from the list.")
+        If Not selectedItem.Contains("₱") Then
+            MessageBox.Show("Please select an actual flavor.")
+            Exit Sub
         End If
+
+        Dim priceText As String =
+        selectedItem.Substring(selectedItem.IndexOf("₱"c) + 1)
+
+        Dim price As Double = Val(priceText)
+
+        If selectedItem.StartsWith("⚠️") Then
+
+            Dim answer As DialogResult =
+            MessageBox.Show(
+                "This flavor contains an allergen you filtered for. Add it anyway?",
+                "Allergy Warning",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning)
+
+            If answer = DialogResult.No Then Exit Sub
+
+        End If
+
+        orderTotal += price
+
+        Dim cleanFlavor As String = selectedItem
+
+        cleanFlavor = cleanFlavor.Replace("✅", "")
+        cleanFlavor = cleanFlavor.Replace("⚠️", "")
+        cleanFlavor = cleanFlavor.Trim()
+
+        ListBox2.Items.Add(cleanFlavor)
+        Form12.CheckedListBox1.Items.Add(cleanFlavor)
+
+        Form12.UpdateOrderSummary()
+
+        MessageBox.Show(
+        cleanFlavor & " added to cart!" &
+        Environment.NewLine &
+        "Current Total: ₱" &
+        orderTotal.ToString("0.00"))
+
     End Sub
     Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
         Form5.Show()
@@ -322,7 +336,6 @@ Public Class Form7
         Form11.Show()
         Me.Hide()
     End Sub
-
     Private Sub Button14_Click(sender As Object, e As EventArgs) Handles Button14.Click
         Form12.Show()
         Me.Hide()

@@ -40,16 +40,6 @@
     Private Sub Button2_Click(sender As Object, e As EventArgs)
 
     End Sub
-    Private Sub Form6_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If CustomerInfoCompleted = False Then
-            MessageBox.Show("Please fill in your information first before accessing this feature.",
-                            "Information Required",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning)
-
-            Exit Sub
-        End If
-    End Sub
     Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
         If CustomerInfoCompleted = False Then
 
