@@ -6,7 +6,7 @@ Imports System.IO
 Imports System.Diagnostics
 
 Public Class Form8
-    Dim connString As String = "server=localhost;database=Scoopify_Creamery;user=root;password=BugfixMaster#22;"
+    Dim connString As String = "server=localhost;database=Scoopify_Creamery;user=root;password=Hannah_lei07;"
     Dim QuestionNo As Integer = 0
     Dim Tropical As Integer = 0
     Dim Caramel As Integer = 0
@@ -130,8 +130,6 @@ Public Class Form8
 
     End Sub
 
-
-
     Private Function GetQuizTotal() As Decimal
 
         Dim total As Decimal = 0
@@ -229,31 +227,7 @@ D. A relaxing spa day"
         End Using
         Return id
     End Function
-    Private Sub SaveItem(conn As MySqlConnection,
-                     transactionID As Integer,
-                     itemName As String)
 
-        Dim productID As Integer =
-        GetProductID(itemName)
-
-        If productID = 0 Then Exit Sub
-
-        Dim price As Decimal = GetPrice(itemName)
-
-        Dim sql As String = "INSERT INTO transaction_details
-        (transaction_id,product_id,quantity,unit_price, subtotal)
-         VALUES
-         (@tid,@pid,1,@price,@price)"
-
-        Dim cmd As New MySqlCommand(sql, conn)
-
-        cmd.Parameters.AddWithValue("@tid", transactionID)
-        cmd.Parameters.AddWithValue("@pid", productID)
-        cmd.Parameters.AddWithValue("@price", price)
-
-        cmd.ExecuteNonQuery()
-
-    End Sub
     Private Function GetPrice(itemName As String) As Decimal
         Dim price As Decimal = 0
         Using conn As New MySqlConnection(connString)
@@ -338,61 +312,13 @@ D. A relaxing spa day"
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        CartManager.AddItem(GetProductID(SelectedFlavor), SelectedFlavor, GetPrice(SelectedFlavor))
+        CartManager.AddItem(GetProductID(SelectedContainer), SelectedContainer, GetPrice(SelectedContainer))
+        CartManager.AddItem(GetProductID(SelectedTopping), SelectedTopping, GetPrice(SelectedTopping))
+        CartManager.AddItem(GetProductID(SelectedSyrup), SelectedSyrup, GetPrice(SelectedSyrup))
 
-        SaveQuizRecommendation()
-
-        Dim total As Decimal = GetQuizTotal()
-
-        Dim orderText As String =
-    DisplayName &
-    " | Flavor: " & SelectedFlavor &
-    " | Container: " & SelectedContainer &
-    " | Topping: " & SelectedTopping &
-    " | Syrup: " & SelectedSyrup &
-    " | Total: ₱" & total.ToString("0.00")
-
-        Form12.CheckedListBox1.Items.Add(orderText)
-
-        Form12.UpdateOrderSummary()
-
-        MessageBox.Show(
-    "🛒 ADDED TO ORDER!" & vbCrLf &
-    "Recommendation: " & DisplayName & vbCrLf & vbCrLf &
-    "Flavor: " & SelectedFlavor & vbCrLf &
-    "Container: " & SelectedContainer & vbCrLf &
-    "Topping: " & SelectedTopping & vbCrLf &
-    "Syrup: " & SelectedSyrup & vbCrLf & vbCrLf &
-    "Thank you for choosing Scoopify!",
-    "Order Successful",
-    MessageBoxButtons.OK,
-    MessageBoxIcon.Information)
-
-    End Sub
-
-    Private Sub SaveQuizRecommendation()
-        Using conn As New MySqlConnection(connString)
-            conn.Open()
-            Dim total As Decimal = 0
-            total += GetPrice(SelectedFlavor)
-            total += GetPrice(SelectedContainer)
-            total += GetPrice(SelectedTopping)
-            total += GetPrice(SelectedSyrup)
-
-            Dim sql As String = "INSERT INTO transactions (customer_id, employee_id, total_amount, payment_method)
-            VALUES (1,3,@total,'Cash')"
-
-            Dim cmd As New MySqlCommand(sql, conn)
-            cmd.Parameters.AddWithValue("@total", total)
-            cmd.ExecuteNonQuery()
-            Dim transactionID As Integer =
-            cmd.LastInsertedId
-
-            SaveItem(conn, transactionID, SelectedFlavor)
-            SaveItem(conn, transactionID, SelectedContainer)
-            SaveItem(conn, transactionID, SelectedTopping)
-            SaveItem(conn, transactionID, SelectedSyrup)
-        End Using
-
+        MessageBox.Show("🛒 Added to cart! Go to your cart to check out.",
+        "Order Successful", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
     Private Sub Button11_Click(sender As Object, e As EventArgs) Handles Button11.Click
         Form1.Show()
@@ -415,6 +341,7 @@ D. A relaxing spa day"
     End Sub
 
     Private Sub Button12_Click(sender As Object, e As EventArgs) Handles Button12.Click
+        Form12.RefreshCart()
         Form12.Show()
         Me.Hide()
     End Sub

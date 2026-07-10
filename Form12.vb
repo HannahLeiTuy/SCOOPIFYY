@@ -1,43 +1,26 @@
-﻿Imports iTextSharp.text
+﻿Imports MySql.Data.MySqlClient
+Imports iTextSharp.text
 Imports iTextSharp.text.pdf
 Imports System.IO
 Imports System.Diagnostics
 Public Class Form12
-    Private Sub Form12_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Public Sub RefreshCart()
+        CheckedListBox1.Items.Clear()
+        For Each item In CartManager.CartItems
+            CheckedListBox1.Items.Add(item.ItemName & " x" & item.Quantity & " - ₱" & item.Subtotal.ToString("0.00"))
+        Next
         UpdateOrderSummary()
     End Sub
 
     Public Sub UpdateOrderSummary()
-
-        Dim total As Decimal = 0
-
-        For Each item As String In CheckedListBox1.Items
-
-            If item.Contains("₱") Then
-
-                Dim parts() As String = item.Split("₱"c)
-
-                If parts.Length > 1 Then
-
-                    Dim priceText As String = parts(1).Trim()
-                    Dim price As Decimal
-
-                    If Decimal.TryParse(priceText, price) Then
-                        total += price
-                    End If
-
-                End If
-
-            End If
-
-        Next
-
         RichTextBox1.Text =
         "========== ORDER SUMMARY ==========" & vbCrLf &
-        "Items in Cart: " & CheckedListBox1.Items.Count & vbCrLf &
-        vbCrLf &
-        "TOTAL: ₱" & total.ToString("0.00")
+        "Items in Cart: " & CartManager.CartItems.Count & vbCrLf & vbCrLf &
+        "TOTAL: ₱" & CartManager.GetTotal().ToString("0.00")
+    End Sub
 
+    Private Sub Form12_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        RefreshCart()
     End Sub
     Private Sub GenerateReceipt(total As Decimal,
                             paymentMethod As String,
@@ -247,108 +230,83 @@ Public Class Form12
         End If
 
     End Sub
-
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
 
-        If CheckedListBox1.Items.Count = 0 Then
-
-            MessageBox.Show(
-            "Your cart is empty.",
-            "Checkout",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Warning)
-
+        If CartManager.CartItems.Count = 0 Then
+            MessageBox.Show("Your cart is empty.", "Checkout", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
-
         End If
 
-        Dim total As Decimal = 0
+        Dim total As Decimal = CartManager.GetTotal()
 
-        For Each item As String In CheckedListBox1.Items
-
-            If item.Contains("₱") Then
-
-                Dim parts() As String = item.Split("₱"c)
-
-                If parts.Length > 1 Then
-
-                    Dim priceText As String = parts(1).Trim()
-                    Dim value As Decimal
-
-                    If Decimal.TryParse(priceText, value) Then
-                        total += value
-                    End If
-
-                End If
-
-            End If
-
-        Next
-        Dim paymentMethod As String = "Cash"
-
-        Dim amountText As String
-
-        amountText = InputBox(
-        "Total Amount: ₱" & total.ToString("0.00") &
-        vbCrLf & vbCrLf &
-        "Enter Amount Tendered:",
+        Dim amountText As String = InputBox(
+        "Total Amount: ₱" & total.ToString("0.00") & vbCrLf & vbCrLf & "Enter Amount Tendered:",
         "Cash Payment")
 
         Dim amountTendered As Decimal
-
         If Not Decimal.TryParse(amountText, amountTendered) Then
-
-            MessageBox.Show(
-            "Invalid amount entered.",
-            "Payment Error",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Warning)
-
+            MessageBox.Show("Invalid amount entered.", "Payment Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
-
         End If
 
         If amountTendered < total Then
-
-            MessageBox.Show(
-            "Insufficient amount.",
-            "Payment Failed",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Warning)
-
+            MessageBox.Show("Insufficient amount.", "Payment Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
-
         End If
 
         Dim change As Decimal = amountTendered - total
 
-        RichTextBox1.Text =
-        "========== RECEIPT ==========" & vbCrLf &
-        "Items Ordered: " & CheckedListBox1.Items.Count & vbCrLf &
-        "Payment Method: CASH" & vbCrLf &
-        "-----------------------------" & vbCrLf &
-        "TOTAL: ₱" & total.ToString("0.00") & vbCrLf &
-        "AMOUNT TENDERED: ₱" & amountTendered.ToString("0.00") & vbCrLf &
-        "CHANGE: ₱" & change.ToString("0.00") & vbCrLf &
-        vbCrLf &
-        "Thank you for choosing Scoopify!"
+        SaveOrderToDatabase(total)
+        GenerateReceipt(total, "Cash", amountTendered, change)
 
-        MessageBox.Show(
-        "Order placed successfully!" & vbCrLf &
-        "Change: ₱" & change.ToString("0.00"),
-        "Order Complete",
-        MessageBoxButtons.OK,
-        MessageBoxIcon.Information)
+        MessageBox.Show("Order placed successfully!" & vbCrLf & "Change: ₱" & change.ToString("0.00"),
+        "Order Complete", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
-        GenerateReceipt(
-        total,
-        paymentMethod,
-        amountTendered,
-        change)
+        CartManager.ClearCart()
+        RefreshCart()
 
-        CheckedListBox1.Items.Clear()
-        UpdateOrderSummary()
+    End Sub
 
+    Private Sub SaveOrderToDatabase(total As Decimal)
+        Dim connString As String = "server=localhost;database=Scoopify_Creamery;user=root;password=Hannah_lei07;"
+
+        Using conn As New MySqlConnection(connString)
+            conn.Open()
+
+            Dim cmdTrans As New MySqlCommand(
+            "INSERT INTO transactions (customer_id, employee_id, total_amount, payment_method)
+             VALUES (1, 3, @total, 'Cash')", conn)
+            cmdTrans.Parameters.AddWithValue("@total", total)
+            cmdTrans.ExecuteNonQuery()
+
+            Dim transactionID As Integer = CInt(cmdTrans.LastInsertedId)
+
+            For Each item In CartManager.CartItems
+                Dim cmdDetail As New MySqlCommand(
+                "INSERT INTO transaction_details (transaction_id, product_id, quantity, unit_price, subtotal)
+                 VALUES (@tid, @pid, @qty, @price, @subtotal)", conn)
+                cmdDetail.Parameters.AddWithValue("@tid", transactionID)
+                cmdDetail.Parameters.AddWithValue("@pid", item.ProductID)
+                cmdDetail.Parameters.AddWithValue("@qty", item.Quantity)
+                cmdDetail.Parameters.AddWithValue("@price", item.Price)
+                cmdDetail.Parameters.AddWithValue("@subtotal", item.Subtotal)
+                cmdDetail.ExecuteNonQuery()
+            Next
+        End Using
+    End Sub
+    Public Sub AddItem(productID As Integer, itemName As String, price As Decimal, Optional qty As Integer = 1)
+        If productID <= 0 Then
+            MessageBox.Show("'" & itemName & "' could not be added — product not found in database.",
+            "Item Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Exit Sub
+        End If
+
+        CartItems.Add(New CartItem With {
+        .ProductID = productID,
+        .ItemName = itemName,
+        .Price = price,
+        .Quantity = qty
+    })
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
@@ -378,6 +336,12 @@ Public Class Form12
         doc.Close()
 
         MessageBox.Show("Receipt generated successfully!")
+    End Sub
+
+    Private Sub Form12_VisibleChanged(sender As Object, e As EventArgs) Handles Me.VisibleChanged
+        If Me.Visible Then
+            RefreshCart()
+        End If
     End Sub
 
     Private Sub Button12_Click(sender As Object, e As EventArgs) Handles Button12.Click

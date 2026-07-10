@@ -1,6 +1,10 @@
 ﻿Imports System.Windows.Forms.VisualStyles.VisualStyleElement
+Imports MySql.Data.MySqlClient
 Public Class Form2
     Dim attempts As Integer = 0
+
+    Dim connString As String =
+    "server=localhost;database=Scoopify_Creamery;user=root;password=BugfixMaster#22;"
     Private Sub Form2_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         TextBox2.UseSystemPasswordChar = True
 
@@ -20,156 +24,110 @@ Public Class Form2
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         If TextBox1.Text.Trim = "" And TextBox2.Text.Trim = "" Then
             MessageBox.Show("Please enter your username and password.",
-                            "Missing Information",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning)
+                        "Missing Information",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         If TextBox1.Text.Trim = "" Then
             MessageBox.Show("Please enter your username.",
-                            "Username Required",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning)
+                        "Username Required",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning)
             TextBox1.Focus()
             Exit Sub
         End If
 
         If TextBox2.Text.Trim = "" Then
             MessageBox.Show("Please enter your password.",
-                            "Password Required",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning)
+                        "Password Required",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning)
             TextBox2.Focus()
             Exit Sub
         End If
+
+        If TextBox2.Text.Length < 8 Then
+            MessageBox.Show("Password must be at least 8 characters long.",
+                        "Invalid Password",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning)
+            TextBox2.Focus()
+            Exit Sub
+        End If
+
         If ComboBox1.SelectedIndex = -1 Then
             MessageBox.Show("Please select your role.",
-                            "Role Required",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning)
+                        "Role Required",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning)
             ComboBox1.Focus()
             Exit Sub
         End If
 
-        If TextBox1.Text = "danhuertas" Then
-            If ComboBox1.Text <> "Primary Server" Then
-                MessageBox.Show("Incorrect role selected.",
-                                "Access Denied",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error)
-                Exit Sub
-            End If
-            If TextBox2.Text = "dan123" Then
-                attempts = 0
-                MessageBox.Show("Welcome back, Dan!" & vbCrLf &
-                                "Login Successful!",
-                                "Success",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Information)
-                Form3.Show()
-                Me.Hide()
-            Else
-                attempts += 1
-                MessageBox.Show("Incorrect password." & vbCrLf &
-                                "Attempt " & attempts & " of 3.",
-                                "Login Failed",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error)
-            End If
+        Try
+            Using conn As New MySqlConnection(connString)
+                conn.Open()
 
-        ElseIf TextBox1.Text = "andreasocito" Then
-            If ComboBox1.Text <> "Production Assistant" Then
-                MessageBox.Show("Incorrect role selected.",
-                                "Access Denied",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error)
-                Exit Sub
-            End If
-            If TextBox2.Text = "andrea123" Then
-                attempts = 0
-                MessageBox.Show("Welcome back, Andrea!" & vbCrLf &
-                                "Login Successful!",
-                                "Success",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Information)
-                Form3.Show()
-                Me.Hide()
-            Else
-                attempts += 1
-                MessageBox.Show("Incorrect password." & vbCrLf &
-                                "Attempt " & attempts & " of 3.",
-                                "Login Failed",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error)
-            End If
+                Dim query As String =
+            "SELECT * FROM employees " &
+            "WHERE username=@username " &
+            "AND password=@password " &
+            "AND role=@role"
 
-        ElseIf TextBox1.Text = "clowiegermino" Then
-            If ComboBox1.Text <> "Cashier" Then
-                MessageBox.Show("Incorrect role selected.",
-                                "Access Denied",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error)
-                Exit Sub
-            End If
-            If TextBox2.Text = "clowie123" Then
-                attempts = 0
-                MessageBox.Show("Welcome back, Clowie!" & vbCrLf &
-                                "Login Successful!",
-                                "Success",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Information)
-                Form3.Show()
-                Me.Hide()
-            Else
-                attempts += 1
-                MessageBox.Show("Incorrect password." & vbCrLf &
-                                "Attempt " & attempts & " of 3.",
-                                "Login Failed",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error)
-            End If
+                Using cmd As New MySqlCommand(query, conn)
+                    cmd.Parameters.AddWithValue("@username", TextBox1.Text.Trim())
+                    cmd.Parameters.AddWithValue("@password", TextBox2.Text.Trim())
+                    cmd.Parameters.AddWithValue("@role", ComboBox1.Text)
 
-        ElseIf TextBox1.Text = "pearlgirao" Then
-            If ComboBox1.Text <> "Store Manager0" Then
-                MessageBox.Show("Incorrect role selected.",
-                                "Access Denied",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error)
-                Exit Sub
-            End If
-            If TextBox2.Text = "pearl123" Then
-                attempts = 0
-                MessageBox.Show("Welcome back, Pearl!" & vbCrLf &
-                                "Login Successful!",
-                                "Success",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Information)
-                Form3.Show()
-                Me.Hide()
-            Else
-                attempts += 1
-                MessageBox.Show("Incorrect password." & vbCrLf &
-                                "Attempt " & attempts & " of 3.",
-                                "Login Failed",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error)
-            End If
-        Else
-            attempts += 1
-            MessageBox.Show("The username you entered does not exist." & vbCrLf &
-                            "Attempt " & attempts & " of 3.",
-                            "Login Failed",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error)
-        End If
+                    Dim reader As MySqlDataReader = cmd.ExecuteReader()
+
+                    If reader.Read() Then
+                        attempts = 0
+
+                        Dim firstName As String = reader("fname").ToString()
+
+                        MessageBox.Show(
+                    "Welcome back, " & firstName & "!" & vbCrLf &
+                    "Login Successful!",
+                    "Success",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information)
+
+                        Form3.Show()
+                        Me.Hide()
+
+                    Else
+                        attempts += 1
+
+                        MessageBox.Show(
+                    "Invalid username, password, or role." &
+                    vbCrLf &
+                    "Attempt " & attempts & " of 3.",
+                    "Login Failed",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error)
+                    End If
+                End Using
+            End Using
+
+        Catch ex As Exception
+            MessageBox.Show(
+        "Database Connection Error:" &
+        vbCrLf &
+        ex.Message,
+        "Database Error",
+        MessageBoxButtons.OK,
+        MessageBoxIcon.Error)
+        End Try
 
         If attempts >= 3 Then
             MessageBox.Show("Too many failed login attempts." & vbCrLf &
-                            "Please wait 5 seconds before trying again.",
-                            "Account Temporarily Locked",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning)
+                        "Please wait 5 seconds before trying again.",
+                        "Account Temporarily Locked",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning)
 
             TextBox1.Enabled = False
             TextBox2.Enabled = False
@@ -244,5 +202,6 @@ Public Class Form2
 
     End Sub
 End Class
+
 
 

@@ -1,4 +1,7 @@
-﻿Public Class Form6
+﻿Imports MySql.Data.MySqlClient
+Public Class Form6
+    Dim connString As String =
+    "server=localhost;database=scoopify_creamery;user=root;password=BugfixMaster#22;"
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         If TextBox1.Text.Trim = "" Then
             MessageBox.Show("🌸 Please enter your First Name.",
@@ -18,8 +21,28 @@
             Exit Sub
         End If
 
-        CustomerFirstName = TextBox1.Text.Trim
-        CustomerLastName = TextBox2.Text.Trim
+        Try
+            Using conn As New MySqlConnection(connString)
+                conn.Open()
+
+                Dim query As String =
+            "INSERT INTO customers(fname, lname) VALUES(@fname,@lname)"
+
+                Using cmd As New MySqlCommand(query, conn)
+                    cmd.Parameters.AddWithValue("@fname", TextBox1.Text.Trim())
+                    cmd.Parameters.AddWithValue("@lname", TextBox2.Text.Trim())
+
+                    cmd.ExecuteNonQuery()
+                End Using
+            End Using
+
+        Catch ex As Exception
+            MessageBox.Show("Database Error: " & ex.Message)
+            Exit Sub
+        End Try
+
+        CustomerFirstName = TextBox1.Text.Trim()
+        CustomerLastName = TextBox2.Text.Trim()
 
         CustomerInfoCompleted = True
         CustomerLoggedIn = True
@@ -100,6 +123,8 @@
     Private Sub Form6_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
     End Sub
+
+    Private Sub Button11_Click(sender As Object, e As EventArgs) Handles Button11.Click
+
+    End Sub
 End Class
-
-

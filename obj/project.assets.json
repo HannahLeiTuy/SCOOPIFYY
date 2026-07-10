@@ -814,23 +814,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Hannah\\.nuget\\packages\\": {},
+    "C:\\Users\\Hannah Lei\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Hannah\\source\\repos\\SCOOPIFYY\\SCOOPIFYY.vbproj",
+      "projectUniqueName": "C:\\Users\\Hannah Lei\\source\\repos\\SCOOPIFYY\\SCOOPIFYY\\SCOOPIFYY.vbproj",
       "projectName": "SCOOPIFYY",
-      "projectPath": "C:\\Users\\Hannah\\source\\repos\\SCOOPIFYY\\SCOOPIFYY.vbproj",
-      "packagesPath": "C:\\Users\\Hannah\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Hannah\\source\\repos\\SCOOPIFYY\\obj\\",
+      "projectPath": "C:\\Users\\Hannah Lei\\source\\repos\\SCOOPIFYY\\SCOOPIFYY\\SCOOPIFYY.vbproj",
+      "packagesPath": "C:\\Users\\Hannah Lei\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Hannah Lei\\source\\repos\\SCOOPIFYY\\SCOOPIFYY\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Hannah\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Hannah Lei\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
