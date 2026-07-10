@@ -28,7 +28,9 @@ Partial Class Form1
         Button8 = New Button()
         Button9 = New Button()
         SuspendLayout()
-
+        ' 
+        ' Button1
+        ' 
         Button1.BackgroundImageLayout = ImageLayout.Stretch
         Button1.Image = CType(resources.GetObject("Button1.Image"), Image)
         Button1.Location = New Point(77, 495)
@@ -36,7 +38,9 @@ Partial Class Form1
         Button1.Size = New Size(328, 85)
         Button1.TabIndex = 0
         Button1.UseVisualStyleBackColor = True
-
+        ' 
+        ' Button2
+        ' 
         Button2.Image = CType(resources.GetObject("Button2.Image"), Image)
         Button2.Location = New Point(433, 45)
         Button2.Name = "Button2"
@@ -44,7 +48,9 @@ Partial Class Form1
         Button2.TabIndex = 1
         Button2.Text = "    "
         Button2.UseVisualStyleBackColor = True
-
+        ' 
+        ' Button3
+        ' 
         Button3.Image = CType(resources.GetObject("Button3.Image"), Image)
         Button3.Location = New Point(569, 45)
         Button3.Name = "Button3"
@@ -52,7 +58,9 @@ Partial Class Form1
         Button3.TabIndex = 2
         Button3.Text = "    "
         Button3.UseVisualStyleBackColor = True
-
+        ' 
+        ' Button4
+        ' 
         Button4.Image = CType(resources.GetObject("Button4.Image"), Image)
         Button4.Location = New Point(726, 44)
         Button4.Name = "Button4"
@@ -60,7 +68,9 @@ Partial Class Form1
         Button4.TabIndex = 3
         Button4.Text = "    "
         Button4.UseVisualStyleBackColor = True
-
+        ' 
+        ' Button5
+        ' 
         Button5.Image = CType(resources.GetObject("Button5.Image"), Image)
         Button5.Location = New Point(859, 44)
         Button5.Name = "Button5"
@@ -68,7 +78,9 @@ Partial Class Form1
         Button5.TabIndex = 4
         Button5.Text = "    "
         Button5.UseVisualStyleBackColor = True
-
+        ' 
+        ' Button6
+        ' 
         Button6.Image = CType(resources.GetObject("Button6.Image"), Image)
         Button6.Location = New Point(1083, 43)
         Button6.Name = "Button6"
@@ -76,7 +88,9 @@ Partial Class Form1
         Button6.TabIndex = 5
         Button6.Text = "    "
         Button6.UseVisualStyleBackColor = True
-
+        ' 
+        ' Button7
+        ' 
         Button7.Image = CType(resources.GetObject("Button7.Image"), Image)
         Button7.Location = New Point(1218, 43)
         Button7.Name = "Button7"
@@ -84,7 +98,9 @@ Partial Class Form1
         Button7.TabIndex = 6
         Button7.Text = "    "
         Button7.UseVisualStyleBackColor = True
-
+        ' 
+        ' Button8
+        ' 
         Button8.BackgroundImageLayout = ImageLayout.Stretch
         Button8.Image = CType(resources.GetObject("Button8.Image"), Image)
         Button8.Location = New Point(1504, 29)
@@ -93,7 +109,9 @@ Partial Class Form1
         Button8.TabIndex = 7
         Button8.Text = "    "
         Button8.UseVisualStyleBackColor = True
-
+        ' 
+        ' Button9
+        ' 
         Button9.BackgroundImageLayout = ImageLayout.Stretch
         Button9.Image = CType(resources.GetObject("Button9.Image"), Image)
         Button9.Location = New Point(1386, 29)
@@ -102,7 +120,9 @@ Partial Class Form1
         Button9.TabIndex = 8
         Button9.Text = "    "
         Button9.UseVisualStyleBackColor = True
-
+        ' 
+        ' Form1
+        ' 
         AutoScaleDimensions = New SizeF(8F, 20F)
         AutoScaleMode = AutoScaleMode.Font
         BackgroundImage = CType(resources.GetObject("$this.BackgroundImage"), Image)

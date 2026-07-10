@@ -53,7 +53,7 @@ Partial Class Form4
         ' 
         Button8.BackgroundImage = CType(resources.GetObject("Button8.BackgroundImage"), Image)
         Button8.BackgroundImageLayout = ImageLayout.Stretch
-        Button8.Location = New Point(1520, 18)
+        Button8.Location = New Point(1478, 21)
         Button8.Name = "Button8"
         Button8.Size = New Size(74, 65)
         Button8.TabIndex = 28
@@ -65,7 +65,7 @@ Partial Class Form4
         Button7.Image = CType(resources.GetObject("Button7.Image"), Image)
         Button7.Location = New Point(1197, 35)
         Button7.Name = "Button7"
-        Button7.Size = New Size(169, 37)
+        Button7.Size = New Size(128, 37)
         Button7.TabIndex = 27
         Button7.Text = "    "
         Button7.UseVisualStyleBackColor = True
@@ -123,29 +123,32 @@ Partial Class Form4
         ' 
         ' Button1
         ' 
-        Button1.Location = New Point(1119, 451)
+        Button1.BackgroundImage = CType(resources.GetObject("Button1.BackgroundImage"), Image)
+        Button1.BackgroundImageLayout = ImageLayout.Stretch
+        Button1.Location = New Point(1133, 449)
         Button1.Name = "Button1"
-        Button1.Size = New Size(263, 40)
+        Button1.Size = New Size(183, 44)
         Button1.TabIndex = 30
-        Button1.Text = "Button1"
         Button1.UseVisualStyleBackColor = True
         ' 
         ' Button2
         ' 
-        Button2.Location = New Point(1082, 649)
+        Button2.BackgroundImage = CType(resources.GetObject("Button2.BackgroundImage"), Image)
+        Button2.BackgroundImageLayout = ImageLayout.Stretch
+        Button2.Location = New Point(1119, 649)
         Button2.Name = "Button2"
-        Button2.Size = New Size(312, 46)
+        Button2.Size = New Size(218, 46)
         Button2.TabIndex = 31
-        Button2.Text = "Button2"
         Button2.UseVisualStyleBackColor = True
         ' 
         ' Button3
         ' 
-        Button3.Location = New Point(1082, 742)
+        Button3.BackgroundImage = CType(resources.GetObject("Button3.BackgroundImage"), Image)
+        Button3.BackgroundImageLayout = ImageLayout.Stretch
+        Button3.Location = New Point(1133, 742)
         Button3.Name = "Button3"
-        Button3.Size = New Size(312, 51)
+        Button3.Size = New Size(183, 46)
         Button3.TabIndex = 32
-        Button3.Text = "Button3"
         Button3.UseVisualStyleBackColor = True
         ' 
         ' ListBox2
@@ -267,27 +270,28 @@ Partial Class Form4
         ' Button15
         ' 
         Button15.Image = CType(resources.GetObject("Button15.Image"), Image)
-        Button15.Location = New Point(1389, 20)
+        Button15.Location = New Point(1364, 26)
         Button15.Name = "Button15"
-        Button15.Size = New Size(109, 63)
+        Button15.Size = New Size(97, 57)
         Button15.TabIndex = 45
         Button15.UseVisualStyleBackColor = True
         ' 
         ' Button16
         ' 
-        Button16.Location = New Point(1119, 552)
+        Button16.BackColor = Color.LightCoral
+        Button16.Location = New Point(1224, 146)
         Button16.Name = "Button16"
-        Button16.Size = New Size(263, 40)
+        Button16.Size = New Size(142, 40)
         Button16.TabIndex = 46
         Button16.Text = "Generate Report"
-        Button16.UseVisualStyleBackColor = True
+        Button16.UseVisualStyleBackColor = False
         ' 
         ' Form4
         ' 
         AutoScaleDimensions = New SizeF(8F, 20F)
         AutoScaleMode = AutoScaleMode.Font
         BackgroundImage = CType(resources.GetObject("$this.BackgroundImage"), Image)
-        BackgroundImageLayout = ImageLayout.Stretch
+        BackgroundImageLayout = ImageLayout.Zoom
         ClientSize = New Size(1606, 857)
         Controls.Add(Button16)
         Controls.Add(Button15)

@@ -16,7 +16,7 @@ Imports System.Reflection
 <Assembly: System.Reflection.AssemblyCompanyAttribute("SCOOPIFYY"),  _
  Assembly: System.Reflection.AssemblyConfigurationAttribute("Debug"),  _
  Assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0"),  _
- Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dbd2e27155ac2361f4744edac73fadf8f737700d"),  _
+ Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+17462c126a0bf17d12ae63a75c756e708d8fc3f3"),  _
  Assembly: System.Reflection.AssemblyProductAttribute("SCOOPIFYY"),  _
  Assembly: System.Reflection.AssemblyTitleAttribute("SCOOPIFYY"),  _
  Assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0"),  _

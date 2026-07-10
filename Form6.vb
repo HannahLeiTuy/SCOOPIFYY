@@ -20,20 +20,21 @@
 
         CustomerFirstName = TextBox1.Text.Trim
         CustomerLastName = TextBox2.Text.Trim
+
         CustomerInfoCompleted = True
+        CustomerLoggedIn = True
 
         MessageBox.Show(
-            "🎉 INFORMATION SAVED SUCCESSFULLY!" &
-            vbCrLf & vbCrLf &
-            "Welcome to Scoopify, " &
-            CustomerFirstName & "!" &
-            vbCrLf &
-            "We're excited to serve you delicious ice cream today! 🍦" &
-            vbCrLf & vbCrLf &
-            "Enjoy browsing our menu and have a sweet experience!",
-            "Welcome to Scoopify!",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information)
+    "🎉 INFORMATION SAVED SUCCESSFULLY!" &
+    vbCrLf & vbCrLf &
+    "Welcome to Scoopify, " &
+    CustomerFirstName & "!" &
+    vbCrLf &
+    "We're excited to serve you delicious ice cream today! 🍦",
+    "Welcome to Scoopify!",
+    MessageBoxButtons.OK,
+    MessageBoxIcon.Information)
+
         Form4.Show()
         Me.Hide()
     End Sub
@@ -94,6 +95,10 @@
                             MessageBoxIcon.Warning)
             Exit Sub
         End If
+    End Sub
+
+    Private Sub Form6_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
     End Sub
 End Class
 
