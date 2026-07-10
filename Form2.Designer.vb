@@ -170,16 +170,17 @@ Partial Class Form2
         ' 
         ' Button11
         ' 
-        Button11.Location = New Point(626, 600)
+        Button11.BackgroundImage = CType(resources.GetObject("Button11.BackgroundImage"), Image)
+        Button11.BackgroundImageLayout = ImageLayout.Stretch
+        Button11.Location = New Point(625, 599)
         Button11.Name = "Button11"
-        Button11.Size = New Size(38, 32)
+        Button11.Size = New Size(39, 35)
         Button11.TabIndex = 18
-        Button11.Text = "Button11"
         Button11.UseVisualStyleBackColor = True
         ' 
         ' Form2
         ' 
-        AutoScaleDimensions = New SizeF(8.0F, 20.0F)
+        AutoScaleDimensions = New SizeF(8F, 20F)
         AutoScaleMode = AutoScaleMode.Font
         BackgroundImage = CType(resources.GetObject("$this.BackgroundImage"), Image)
         BackgroundImageLayout = ImageLayout.Stretch
