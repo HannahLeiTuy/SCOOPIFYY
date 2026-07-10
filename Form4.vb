@@ -5,7 +5,7 @@ Imports System.Diagnostics
 Imports System.IO
 
 Public Class Form4
-    Dim connString As String = "server=localhost;database=Scoopify_Creamery;user=root;password=BugfixMaster#22;"
+    Dim connString As String = "server=localhost;database=Scoopify_Creamery;user=root;password=Hannah_lei07;"
     Dim total As Decimal = 0
     Private OrderList As New List(Of OrderItem)
 
@@ -196,53 +196,22 @@ Public Class Form4
         End Using
         Return id
     End Function
-
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim price As Decimal = 0
-        Dim description = ""
         Dim qty As Integer = NumericUpDown1.Value
+        AddCheckedItemsToCart(CheckedListBox1, qty)
+        AddCheckedItemsToCart(CheckedListBox2, qty)
+        AddCheckedItemsToCart(CheckedListBox3, qty)
+        AddCheckedItemsToCart(CheckedListBox4, qty)
+    End Sub
 
-        For Each item In CheckedListBox1.CheckedItems
-            price += GetPrice(item.ToString)
-            description &= item.ToString & ", "
+    Private Sub AddCheckedItemsToCart(box As CheckedListBox, qty As Integer)
+        For Each obj In box.CheckedItems
+            Dim name As String = obj.ToString()
+            Dim price As Decimal = GetPrice(name)
+            Dim pid As Integer = GetProductID(name)
+            CartManager.AddItem(pid, name, price, qty)
+            ListBox2.Items.Add(name & " x" & qty & " - ₱" & (price * qty).ToString("0.00"))
         Next
-
-        For Each item In CheckedListBox2.CheckedItems
-            price += GetPrice(item.ToString)
-            description &= item.ToString & ", "
-        Next
-
-        For Each item In CheckedListBox3.CheckedItems
-            price += GetPrice(item.ToString)
-            description &= item.ToString & ", "
-        Next
-
-        For Each item In CheckedListBox4.CheckedItems
-            price += GetPrice(item.ToString)
-            description &= item.ToString & ", "
-        Next
-
-        If description = "" Then
-            MessageBox.Show("Please select an item.")
-            Exit Sub
-        End If
-
-        description = description.TrimEnd(","c, " "c)
-        ListBox2.Items.Add(description & " | Qty: " & qty & " | Total: ₱" & price * qty)
-        Form12.CheckedListBox1.Items.Add(
-    description & " | Qty: " &
-    qty &
-    " | Total: ₱" &
-    price * qty)
-
-        Form12.UpdateOrderSummary()
-        total += price * qty
-        Label1.Text = "Total: ₱" & total
-
-        AddItems(CheckedListBox1, qty)
-        AddItems(CheckedListBox2, qty)
-        AddItems(CheckedListBox3, qty)
-        AddItems(CheckedListBox4, qty)
     End Sub
 
     Private Sub ClearSelection()
@@ -267,26 +236,14 @@ Public Class Form4
             Exit Sub
         End If
 
-        Using conn As New MySqlConnection(connString)
-            conn.Open()
-
-            Dim cmdTrans As New MySqlCommand(
-        "INSERT INTO transactions (customer_id, employee_id, total_amount, payment_method)
-         VALUES (1, 3, @total, 'Cash')", conn)
-
-            cmdTrans.Parameters.AddWithValue("@total", total)
-            cmdTrans.ExecuteNonQuery()
-
-            Dim transactionID As Integer = cmdTrans.LastInsertedId
-
-            SaveItems(conn, transactionID)
-        End Using
-
-        Dim message = "Order confirmed!" &
+        Dim message = "🛒 Added to cart! " &
                     vbCrLf
-        message &= "" & vbCrLf & "Total: ₱ " & total
-
+        message &= "" & vbCrLf & "SubTotal: ₱ " & total
         MessageBox.Show(message)
+
+        Form12.RefreshCart()
+        Form12.Show()
+        Me.Hide()
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
@@ -387,6 +344,7 @@ Public Class Form4
     End Sub
 
     Private Sub Button15_Click(sender As Object, e As EventArgs) Handles Button15.Click
+        Form12.RefreshCart()
         Form12.Show()
         Me.Hide()
     End Sub

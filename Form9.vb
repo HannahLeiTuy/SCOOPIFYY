@@ -1,18 +1,21 @@
 ﻿Public Class Form9
     Private currentName As String = ""
     Private currentPrice As Decimal = 0
+    Private currentProductID As Integer = 0
 
     Private dailyFlavor() As String = {
-        "The Choco-Mint Extreme",
-        "Rich chocolate with mint chips.",
-        "95.00"
-    }
+    "The Choco-Mint Extreme",
+    "Rich chocolate with mint chips.",
+    "95.00",
+    "2"
+}
 
     Private weeklyFlavor() As String = {
-        "The Birthday Explosion",
-        "Cake ice cream with sprinkles.",
-        "90.00"
-    }
+    "The Birthday Explosion",
+    "Cake ice cream with sprinkles.",
+    "90.00",
+    "5"
+}
 
     Private Sub Form9_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -38,7 +41,9 @@
     End Sub
 
     Private Sub ShowFlavor(title As String, flavor() As String)
-
+        currentName = flavor(0)
+        currentPrice = CDec(flavor(2))
+        currentProductID = CInt(flavor(3))
         currentName = flavor(0)
         currentPrice = CDec(flavor(2))
 
@@ -85,9 +90,7 @@
         " | Total: ₱" &
         currentPrice.ToString("0.00")
 
-            Form12.CheckedListBox1.Items.Add(orderText)
-
-            Form12.UpdateOrderSummary()
+            CartManager.AddItem(currentProductID, currentName, currentPrice)
 
             ListBox1.Items.Clear()
 
@@ -138,6 +141,7 @@
     End Sub
 
     Private Sub Button11_Click(sender As Object, e As EventArgs) Handles Button11.Click
+        Form12.RefreshCart()
         Form12.Show()
         Me.Hide()
     End Sub

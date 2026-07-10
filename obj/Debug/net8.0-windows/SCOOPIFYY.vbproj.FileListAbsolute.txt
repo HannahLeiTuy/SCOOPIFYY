@@ -89,3 +89,8 @@ C:\Users\Hannah\source\repos\SCOOPIFYY\obj\Debug\net8.0-windows\SCOOPIFYY.vbproj
 C:\Users\Hannah\source\repos\SCOOPIFYY\obj\Debug\net8.0-windows\SCOOPIFYY.genruntimeconfig.cache
 C:\Users\Hannah\source\repos\SCOOPIFYY\obj\Debug\net8.0-windows\ref\SCOOPIFYY.dll
 C:\Users\Hannah\source\repos\SCOOPIFYY\bin\Debug\net8.0-windows\itextsharp.dll
+C:\Users\Hannah Lei\source\repos\SCOOPIFYY\SCOOPIFYY\bin\Debug\net8.0-windows\itextsharp.dll
+C:\Users\Hannah Lei\source\repos\SCOOPIFYY\SCOOPIFYY\obj\Debug\net8.0-windows\SCOOPIFYY.Form10.resources
+C:\Users\Hannah Lei\source\repos\SCOOPIFYY\SCOOPIFYY\obj\Debug\net8.0-windows\SCOOPIFYY.Form11.resources
+C:\Users\Hannah Lei\source\repos\SCOOPIFYY\SCOOPIFYY\obj\Debug\net8.0-windows\SCOOPIFYY.Form12.resources
+C:\Users\Hannah Lei\source\repos\SCOOPIFYY\SCOOPIFYY\obj\Debug\net8.0-windows\SCOOPIFYY.sourcelink.json

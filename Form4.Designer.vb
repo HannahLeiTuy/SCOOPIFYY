@@ -93,7 +93,7 @@ Partial Class Form4
         ' Button10
         ' 
         Button10.Image = CType(resources.GetObject("Button10.Image"), Image)
-        Button10.Location = New Point(686, 35)
+        Button10.Location = New Point(691, 35)
         Button10.Name = "Button10"
         Button10.Size = New Size(93, 37)
         Button10.TabIndex = 24
@@ -103,7 +103,7 @@ Partial Class Form4
         ' Button11
         ' 
         Button11.Image = CType(resources.GetObject("Button11.Image"), Image)
-        Button11.Location = New Point(510, 35)
+        Button11.Location = New Point(526, 36)
         Button11.Name = "Button11"
         Button11.Size = New Size(124, 37)
         Button11.TabIndex = 23
@@ -114,7 +114,7 @@ Partial Class Form4
         ' 
         Button12.BackgroundImageLayout = ImageLayout.Center
         Button12.Image = CType(resources.GetObject("Button12.Image"), Image)
-        Button12.Location = New Point(376, 35)
+        Button12.Location = New Point(402, 35)
         Button12.Name = "Button12"
         Button12.Size = New Size(89, 37)
         Button12.TabIndex = 22
@@ -162,7 +162,7 @@ Partial Class Form4
         ' NumericUpDown1
         ' 
         NumericUpDown1.Font = New Font("Segoe UI", 11F)
-        NumericUpDown1.Location = New Point(471, 728)
+        NumericUpDown1.Location = New Point(484, 732)
         NumericUpDown1.Name = "NumericUpDown1"
         NumericUpDown1.Size = New Size(143, 32)
         NumericUpDown1.TabIndex = 35
@@ -171,7 +171,7 @@ Partial Class Form4
         ' 
         CheckedListBox1.Font = New Font("Sitka Banner", 12F)
         CheckedListBox1.FormattingEnabled = True
-        CheckedListBox1.Location = New Point(81, 398)
+        CheckedListBox1.Location = New Point(115, 398)
         CheckedListBox1.Name = "CheckedListBox1"
         CheckedListBox1.Size = New Size(786, 312)
         CheckedListBox1.TabIndex = 36
@@ -181,7 +181,7 @@ Partial Class Form4
         ' 
         CheckedListBox2.Font = New Font("Sitka Banner", 12F)
         CheckedListBox2.FormattingEnabled = True
-        CheckedListBox2.Location = New Point(81, 398)
+        CheckedListBox2.Location = New Point(115, 398)
         CheckedListBox2.Name = "CheckedListBox2"
         CheckedListBox2.Size = New Size(786, 312)
         CheckedListBox2.TabIndex = 37
@@ -191,7 +191,7 @@ Partial Class Form4
         ' 
         CheckedListBox3.Font = New Font("Sitka Banner", 12F)
         CheckedListBox3.FormattingEnabled = True
-        CheckedListBox3.Location = New Point(81, 398)
+        CheckedListBox3.Location = New Point(115, 398)
         CheckedListBox3.Name = "CheckedListBox3"
         CheckedListBox3.Size = New Size(786, 312)
         CheckedListBox3.TabIndex = 38
@@ -201,7 +201,7 @@ Partial Class Form4
         ' 
         CheckedListBox4.Font = New Font("Sitka Banner", 12F)
         CheckedListBox4.FormattingEnabled = True
-        CheckedListBox4.Location = New Point(81, 398)
+        CheckedListBox4.Location = New Point(115, 398)
         CheckedListBox4.Name = "CheckedListBox4"
         CheckedListBox4.Size = New Size(786, 312)
         CheckedListBox4.TabIndex = 39

@@ -74,6 +74,7 @@
             Exit Sub
         End If
 
+        Form12.RefreshCart()
         Form12.Show()
         Me.Hide()
     End Sub
