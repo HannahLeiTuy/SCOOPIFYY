@@ -201,6 +201,11 @@ Public Class Form2
         TextBox2.UseSystemPasswordChar = Not TextBox2.UseSystemPasswordChar
 
     End Sub
+
+    Private Sub Button9_Click(sender As Object, e As EventArgs) Handles Button9.Click
+        Form6.Show()
+        Me.Hide()
+    End Sub
 End Class
 
 
