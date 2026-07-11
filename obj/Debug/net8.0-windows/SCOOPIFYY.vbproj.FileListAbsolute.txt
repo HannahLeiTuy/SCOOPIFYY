@@ -94,3 +94,4 @@ C:\Users\Hannah Lei\source\repos\SCOOPIFYY\SCOOPIFYY\obj\Debug\net8.0-windows\SC
 C:\Users\Hannah Lei\source\repos\SCOOPIFYY\SCOOPIFYY\obj\Debug\net8.0-windows\SCOOPIFYY.Form11.resources
 C:\Users\Hannah Lei\source\repos\SCOOPIFYY\SCOOPIFYY\obj\Debug\net8.0-windows\SCOOPIFYY.Form12.resources
 C:\Users\Hannah Lei\source\repos\SCOOPIFYY\SCOOPIFYY\obj\Debug\net8.0-windows\SCOOPIFYY.sourcelink.json
+C:\Users\Hannah Lei\source\repos\SCOOPIFYY\SCOOPIFYY\obj\Debug\net8.0-windows\SCOOPIFYY.Form13.resources

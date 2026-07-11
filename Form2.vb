@@ -4,7 +4,7 @@ Public Class Form2
     Dim attempts As Integer = 0
 
     Dim connString As String =
-    "server=localhost;database=Scoopify_Creamery;user=root;password=BugfixMaster#22;"
+    "server=localhost;database=Scoopify_Creamery;user=root;password=Hannah_lei07;"
     Private Sub Form2_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         TextBox2.UseSystemPasswordChar = True
 

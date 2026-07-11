@@ -171,7 +171,7 @@ Public Class Form12
     Private Sub CheckedListBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CheckedListBox1.SelectedIndexChanged
 
         If CheckedListBox1.SelectedIndex = -1 Then Exit Sub
-
+        Dim index As Integer = CheckedListBox1.SelectedIndex
         Dim result As DialogResult
 
         result = MessageBox.Show(
@@ -181,16 +181,9 @@ Public Class Form12
         MessageBoxIcon.Question)
 
         If result = DialogResult.Yes Then
-
-            Dim selectedItem As String =
-            CheckedListBox1.SelectedItem.ToString()
-
-            CheckedListBox1.Items.Remove(selectedItem)
-
-            UpdateOrderSummary()
-
+            CartManager.CartItems.RemoveAt(index)
+            RefreshCart()
         End If
-
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
@@ -217,9 +210,8 @@ Public Class Form12
 
         If answer = DialogResult.Yes Then
 
-            CheckedListBox1.Items.Clear()
-
-            UpdateOrderSummary()
+            CartManager.ClearCart()
+            RefreshCart()
 
             MessageBox.Show(
                 "Cart cleared successfully!",
@@ -256,7 +248,7 @@ Public Class Form12
 
         Dim change As Decimal = amountTendered - total
 
-        SaveOrderToDatabase(total)
+        SaveOrderToDatabase(total, amountTendered, change)
         GenerateReceipt(total, "Cash", amountTendered, change)
 
         MessageBox.Show("Order placed successfully!" & vbCrLf & "Change: ₱" & change.ToString("0.00"),
@@ -267,16 +259,21 @@ Public Class Form12
 
     End Sub
 
-    Private Sub SaveOrderToDatabase(total As Decimal)
+    Private Sub SaveOrderToDatabase(total As Decimal, cashReceived As Decimal, changeAmount As Decimal)
         Dim connString As String = "server=localhost;database=Scoopify_Creamery;user=root;password=Hannah_lei07;"
 
         Using conn As New MySqlConnection(connString)
             conn.Open()
 
             Dim cmdTrans As New MySqlCommand(
-            "INSERT INTO transactions (customer_id, employee_id, total_amount, payment_method)
-             VALUES (1, 3, @total, 'Cash')", conn)
+            "INSERT INTO transactions
+            (customer_id, employee_id, total_amount, payment_method, cash_received, change_amount)
+            VALUES
+            (1, 3, @total, 'Cash', @cash, @change)", conn)
+
             cmdTrans.Parameters.AddWithValue("@total", total)
+            cmdTrans.Parameters.AddWithValue("@cash", cashReceived)
+            cmdTrans.Parameters.AddWithValue("@change", changeAmount)
             cmdTrans.ExecuteNonQuery()
 
             Dim transactionID As Integer = CInt(cmdTrans.LastInsertedId)
@@ -293,20 +290,6 @@ Public Class Form12
                 cmdDetail.ExecuteNonQuery()
             Next
         End Using
-    End Sub
-    Public Sub AddItem(productID As Integer, itemName As String, price As Decimal, Optional qty As Integer = 1)
-        If productID <= 0 Then
-            MessageBox.Show("'" & itemName & "' could not be added — product not found in database.",
-            "Item Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Exit Sub
-        End If
-
-        CartItems.Add(New CartItem With {
-        .ProductID = productID,
-        .ItemName = itemName,
-        .Price = price,
-        .Quantity = qty
-    })
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click

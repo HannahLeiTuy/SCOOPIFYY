@@ -41,9 +41,9 @@ Partial Class Form9
         ' 
         Button1.BackgroundImage = CType(resources.GetObject("Button1.BackgroundImage"), Image)
         Button1.BackgroundImageLayout = ImageLayout.Stretch
-        Button1.Location = New Point(808, 346)
+        Button1.Location = New Point(798, 346)
         Button1.Name = "Button1"
-        Button1.Size = New Size(352, 92)
+        Button1.Size = New Size(362, 92)
         Button1.TabIndex = 0
         Button1.UseVisualStyleBackColor = True
         ' 
@@ -61,9 +61,9 @@ Partial Class Form9
         ' 
         Button3.BackgroundImage = CType(resources.GetObject("Button3.BackgroundImage"), Image)
         Button3.BackgroundImageLayout = ImageLayout.Stretch
-        Button3.Location = New Point(947, 775)
+        Button3.Location = New Point(937, 766)
         Button3.Name = "Button3"
-        Button3.Size = New Size(398, 90)
+        Button3.Size = New Size(428, 90)
         Button3.TabIndex = 2
         Button3.UseVisualStyleBackColor = True
         ' 

@@ -7,14 +7,14 @@
     "The Choco-Mint Extreme",
     "Rich chocolate with mint chips.",
     "95.00",
-    "2"
+    "41"
 }
 
     Private weeklyFlavor() As String = {
     "The Birthday Explosion",
     "Cake ice cream with sprinkles.",
     "90.00",
-    "5"
+    "42"
 }
 
     Private Sub Form9_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -44,8 +44,6 @@
         currentName = flavor(0)
         currentPrice = CDec(flavor(2))
         currentProductID = CInt(flavor(3))
-        currentName = flavor(0)
-        currentPrice = CDec(flavor(2))
 
         ListBox1.Items.Clear()
 
@@ -83,12 +81,6 @@
             MessageBoxIcon.Question)
 
         If answer = DialogResult.Yes Then
-
-            Dim orderText As String =
-        currentName &
-        " | Mystery Flavor" &
-        " | Total: ₱" &
-        currentPrice.ToString("0.00")
 
             CartManager.AddItem(currentProductID, currentName, currentPrice)
 

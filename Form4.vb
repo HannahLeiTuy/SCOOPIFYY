@@ -51,7 +51,6 @@ Public Class Form4
 
         doc.Add(New Paragraph(""))
 
-        ' Orders
         For Each item In ListBox2.Items
             doc.Add(New Paragraph(
             item.ToString(),
@@ -236,9 +235,7 @@ Public Class Form4
             Exit Sub
         End If
 
-        Dim message = "🛒 Added to cart! " &
-                    vbCrLf
-        message &= "" & vbCrLf & "SubTotal: ₱ " & total
+        Dim message = "🛒 Added to cart! "
         MessageBox.Show(message)
 
         Form12.RefreshCart()
@@ -320,7 +317,7 @@ Public Class Form4
     End Sub
 
     Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
-        Form3.Show()
+        Form6.Show()
         Me.Hide()
     End Sub
 

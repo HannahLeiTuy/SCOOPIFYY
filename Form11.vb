@@ -23,7 +23,7 @@
     End Sub
 
     Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
-        Form4.Show()
+        Form6.Show()
         Me.Hide()
     End Sub
 
