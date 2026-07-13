@@ -25,7 +25,6 @@ Partial Class Form8
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form8))
         RichTextBox1 = New RichTextBox()
         Button1 = New Button()
-        Button2 = New Button()
         Button3 = New Button()
         ComboBox1 = New ComboBox()
         Button4 = New Button()
@@ -37,7 +36,7 @@ Partial Class Form8
         Button10 = New Button()
         Button11 = New Button()
         Button12 = New Button()
-        Button13 = New Button()
+        Button2 = New Button()
         SuspendLayout()
         ' 
         ' RichTextBox1
@@ -57,16 +56,6 @@ Partial Class Form8
         Button1.Size = New Size(381, 89)
         Button1.TabIndex = 1
         Button1.UseVisualStyleBackColor = True
-        ' 
-        ' Button2
-        ' 
-        Button2.BackgroundImage = CType(resources.GetObject("Button2.BackgroundImage"), Image)
-        Button2.BackgroundImageLayout = ImageLayout.Stretch
-        Button2.Location = New Point(278, 756)
-        Button2.Name = "Button2"
-        Button2.Size = New Size(226, 82)
-        Button2.TabIndex = 2
-        Button2.UseVisualStyleBackColor = True
         ' 
         ' Button3
         ' 
@@ -178,14 +167,15 @@ Partial Class Form8
         Button12.Text = "    "
         Button12.UseVisualStyleBackColor = True
         ' 
-        ' Button13
+        ' Button2
         ' 
-        Button13.Location = New Point(549, 801)
-        Button13.Name = "Button13"
-        Button13.Size = New Size(141, 29)
-        Button13.TabIndex = 37
-        Button13.Text = "Generate Report"
-        Button13.UseVisualStyleBackColor = True
+        Button2.BackgroundImage = CType(resources.GetObject("Button2.BackgroundImage"), Image)
+        Button2.BackgroundImageLayout = ImageLayout.Stretch
+        Button2.Location = New Point(278, 756)
+        Button2.Name = "Button2"
+        Button2.Size = New Size(226, 82)
+        Button2.TabIndex = 2
+        Button2.UseVisualStyleBackColor = True
         ' 
         ' Form8
         ' 
@@ -194,7 +184,6 @@ Partial Class Form8
         BackgroundImage = CType(resources.GetObject("$this.BackgroundImage"), Image)
         BackgroundImageLayout = ImageLayout.Stretch
         ClientSize = New Size(1670, 892)
-        Controls.Add(Button13)
         Controls.Add(Button12)
         Controls.Add(Button8)
         Controls.Add(Button7)
@@ -210,13 +199,12 @@ Partial Class Form8
         Controls.Add(Button1)
         Controls.Add(RichTextBox1)
         Name = "Form8"
-        Text = "Form8"
+        Text = "Dessert Personality Quiz"
         ResumeLayout(False)
     End Sub
 
     Friend WithEvents RichTextBox1 As RichTextBox
     Friend WithEvents Button1 As Button
-    Friend WithEvents Button2 As Button
     Friend WithEvents Button3 As Button
     Friend WithEvents ComboBox1 As ComboBox
     Friend WithEvents Button4 As Button
@@ -228,5 +216,5 @@ Partial Class Form8
     Friend WithEvents Button10 As Button
     Friend WithEvents Button11 As Button
     Friend WithEvents Button12 As Button
-    Friend WithEvents Button13 As Button
+    Friend WithEvents Button2 As Button
 End Class

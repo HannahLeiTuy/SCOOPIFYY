@@ -177,7 +177,7 @@ Partial Class Form9
         Controls.Add(Button2)
         Controls.Add(Button1)
         Name = "Form9"
-        Text = "Form9"
+        Text = "Mystery Flavor"
         ResumeLayout(False)
     End Sub
 

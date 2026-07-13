@@ -200,7 +200,7 @@ Partial Class Form2
         Controls.Add(TextBox2)
         Controls.Add(TextBox1)
         Name = "Form2"
-        Text = "Form2"
+        Text = "Staff Access Page "
         ResumeLayout(False)
         PerformLayout()
     End Sub

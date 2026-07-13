@@ -1,7 +1,8 @@
 ﻿Imports MySql.Data.MySqlClient
 Public Class Form6
     Dim connString As String =
-    "server=localhost;database=scoopify_creamery;user=root;password=Hannah_lei07;"
+    "server=localhost;database=Scoopify_Creamery;user=root;password=BugfixMaster#22;"
+
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         If TextBox1.Text.Trim = "" Then
             MessageBox.Show("🌸 Please enter your First Name.",
@@ -121,7 +122,9 @@ Public Class Form6
     End Sub
 
     Private Sub Form6_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        Me.FormBorderStyle = FormBorderStyle.FixedSingle
+        Me.MaximizeBox = False
+        Me.StartPosition = FormStartPosition.CenterScreen
     End Sub
 
     Private Sub Button11_Click(sender As Object, e As EventArgs) Handles Button11.Click

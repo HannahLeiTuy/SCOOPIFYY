@@ -1,17 +1,25 @@
 ﻿Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports MySql.Data.MySqlClient
 Public Class Form2
+    Public Shared LoggedInRole As String = ""
+    Public Shared LoggedInUser As String = ""
     Dim attempts As Integer = 0
 
     Dim connString As String =
-    "server=localhost;database=Scoopify_Creamery;user=root;password=Hannah_lei07;"
+    "server=localhost;database=Scoopify_Creamery;user=root;password=BugfixMaster#22;"
+
     Private Sub Form2_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.FormBorderStyle = FormBorderStyle.FixedSingle
+        Me.MaximizeBox = False
+        Me.StartPosition = FormStartPosition.CenterScreen
+
         TextBox2.UseSystemPasswordChar = True
 
         Timer1.Enabled = False
         Timer1.Interval = 5000
 
         ComboBox1.Items.Clear()
+        ComboBox1.Items.Add("Admin")
         ComboBox1.Items.Add("Primary Server")
         ComboBox1.Items.Add("Production Assistant")
         ComboBox1.Items.Add("Cashier")
@@ -87,6 +95,9 @@ Public Class Form2
                         attempts = 0
 
                         Dim firstName As String = reader("fname").ToString()
+
+                        LoggedInRole = reader("role").ToString()
+                        LoggedInUser = reader("fname").ToString()
 
                         MessageBox.Show(
                     "Welcome back, " & firstName & "!" & vbCrLf &
@@ -205,6 +216,10 @@ Public Class Form2
     Private Sub Button9_Click(sender As Object, e As EventArgs) Handles Button9.Click
         Form6.Show()
         Me.Hide()
+    End Sub
+
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+
     End Sub
 End Class
 

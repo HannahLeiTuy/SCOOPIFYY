@@ -1,23 +1,42 @@
 ﻿Public Class Form9
+
     Private currentName As String = ""
     Private currentPrice As Decimal = 0
     Private currentProductID As Integer = 0
 
-    Private dailyFlavor() As String = {
-    "The Choco-Mint Extreme",
-    "Rich chocolate with mint chips.",
-    "95.00",
-    "41"
-}
+    Private rnd As New Random()
 
-    Private weeklyFlavor() As String = {
-    "The Birthday Explosion",
-    "Cake ice cream with sprinkles.",
-    "90.00",
-    "42"
-}
+    Private mysteryFlavors(,) As String = {
+        {"Galaxy Berry Blast", "Mixed berry ice cream with popping candy and galaxy sprinkles.", "99.00", "41"},
+        {"Caramel Volcano Crunch", "Salted caramel ice cream with cookie crunch and caramel drizzle.", "95.00", "42"},
+        {"Mango Paradise Swirl", "Mango ice cream with tropical fruit bits and mango syrup.", "92.00", "43"},
+        {"Cookies Overload Supreme", "Cookies & cream ice cream loaded with Oreos and hot fudge.", "98.00", "44"}
+    }
+
+    Private dailyFlavor(3) As String
+    Private weeklyFlavor(3) As String
+
+    Private Sub ShuffleMysteryFlavors()
+
+        Dim first As Integer = rnd.Next(0, 4)
+        Dim second As Integer
+
+        Do
+            second = rnd.Next(0, 4)
+        Loop While second = first
+
+        For i As Integer = 0 To 3
+            dailyFlavor(i) = mysteryFlavors(first, i)
+            weeklyFlavor(i) = mysteryFlavors(second, i)
+        Next
+
+    End Sub
 
     Private Sub Form9_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.FormBorderStyle = FormBorderStyle.FixedSingle
+        Me.MaximizeBox = False
+        Me.StartPosition = FormStartPosition.CenterScreen
+        ShuffleMysteryFlavors()
 
         ListBox1.Font = New Font("Georgia", 11, FontStyle.Italic)
         ListBox1.HorizontalScrollbar = True
@@ -41,6 +60,7 @@
     End Sub
 
     Private Sub ShowFlavor(title As String, flavor() As String)
+
         currentName = flavor(0)
         currentPrice = CDec(flavor(2))
         currentProductID = CInt(flavor(3))
@@ -64,10 +84,11 @@
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
 
         If currentName = "" Then
-            MessageBox.Show("Reveal a flavor first!",
-                            "Scoopify",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information)
+            MessageBox.Show(
+                "Reveal a flavor first!",
+                "Scoopify",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
             Exit Sub
         End If
 
@@ -82,7 +103,10 @@
 
         If answer = DialogResult.Yes Then
 
-            CartManager.AddItem(currentProductID, currentName, currentPrice)
+            CartManager.AddItem(
+                currentProductID,
+                currentName,
+                currentPrice)
 
             ListBox1.Items.Clear()
 
@@ -95,8 +119,10 @@
             ListBox1.Items.Add("✨ Scoopify! 🍨")
 
             Button3.Enabled = False
+
             currentName = ""
             currentPrice = 0
+            currentProductID = 0
 
         End If
 
@@ -118,8 +144,8 @@
     End Sub
 
     Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
-        Form2.Show
-        Hide
+        Form2.Show()
+        Me.Hide()
     End Sub
 
     Private Sub Button9_Click(sender As Object, e As EventArgs) Handles Button9.Click
@@ -137,4 +163,5 @@
         Form12.Show()
         Me.Hide()
     End Sub
+
 End Class

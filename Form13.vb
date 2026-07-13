@@ -9,9 +9,6 @@ Public Class Form13
         LoadGrid()
     End Sub
 
-    ' Combines the old LoadData() and the search query in
-    ' TextBox4_TextChanged into one method (they were near-identical
-    ' copies of the same SQL).
     Private Sub LoadGrid(Optional search As String = "")
         Try
             conn.Open()
@@ -176,3 +173,5 @@ Public Class Form13
         Me.Hide()
     End Sub
 End Class
+
+

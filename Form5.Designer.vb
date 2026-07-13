@@ -161,7 +161,7 @@ Partial Class Form5
         Controls.Add(Button2)
         Controls.Add(Button1)
         Name = "Form5"
-        Text = "Form5"
+        Text = "Services"
         ResumeLayout(False)
     End Sub
 

@@ -173,7 +173,7 @@ Partial Class Form6
         Controls.Add(TextBox2)
         Controls.Add(TextBox1)
         Name = "Form6"
-        Text = "Form6"
+        Text = "Customer Sign Up"
         ResumeLayout(False)
         PerformLayout()
     End Sub

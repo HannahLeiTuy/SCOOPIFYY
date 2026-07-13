@@ -5,6 +5,7 @@ Public Class Form1
         Me.Hide()
     End Sub
 
+
     Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
         Form6.Show()
         Me.Hide()
@@ -83,6 +84,8 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        Me.FormBorderStyle = FormBorderStyle.FixedSingle
+        Me.MaximizeBox = False
+        Me.StartPosition = FormStartPosition.CenterScreen
     End Sub
 End Class

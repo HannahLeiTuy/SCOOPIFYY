@@ -277,7 +277,7 @@ Partial Class Form7
         Controls.Add(CheckBox2)
         Controls.Add(CheckBox1)
         Name = "Form7"
-        Text = "Form7"
+        Text = "Flavor Mood Selector"
         ResumeLayout(False)
         PerformLayout()
     End Sub

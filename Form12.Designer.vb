@@ -193,7 +193,7 @@ Partial Class Form12
         Controls.Add(RichTextBox1)
         Controls.Add(CheckedListBox1)
         Name = "Form12"
-        Text = "Form12"
+        Text = "Cart Page"
         ResumeLayout(False)
     End Sub
 

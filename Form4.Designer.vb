@@ -39,13 +39,12 @@ Partial Class Form4
         CheckedListBox2 = New CheckedListBox()
         CheckedListBox3 = New CheckedListBox()
         CheckedListBox4 = New CheckedListBox()
-        Label1 = New Label()
         Button4 = New Button()
         Button5 = New Button()
         Button13 = New Button()
         Button14 = New Button()
         Button15 = New Button()
-        Button16 = New Button()
+        Label1 = New Label()
         CType(NumericUpDown1, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
@@ -207,17 +206,6 @@ Partial Class Form4
         CheckedListBox4.TabIndex = 39
         CheckedListBox4.Visible = False
         ' 
-        ' Label1
-        ' 
-        Label1.AutoSize = True
-        Label1.BackColor = SystemColors.ButtonHighlight
-        Label1.Font = New Font("Segoe UI", 15F)
-        Label1.Location = New Point(986, 577)
-        Label1.Name = "Label1"
-        Label1.Size = New Size(87, 35)
-        Label1.TabIndex = 40
-        Label1.Text = "Label1"
-        ' 
         ' Button4
         ' 
         Button4.BackColor = SystemColors.Control
@@ -276,15 +264,16 @@ Partial Class Form4
         Button15.TabIndex = 45
         Button15.UseVisualStyleBackColor = True
         ' 
-        ' Button16
+        ' Label1
         ' 
-        Button16.BackColor = Color.LightCoral
-        Button16.Location = New Point(1224, 146)
-        Button16.Name = "Button16"
-        Button16.Size = New Size(142, 40)
-        Button16.TabIndex = 46
-        Button16.Text = "Generate Report"
-        Button16.UseVisualStyleBackColor = False
+        Label1.AutoSize = True
+        Label1.BackColor = SystemColors.ButtonHighlight
+        Label1.Font = New Font("Segoe UI", 15F)
+        Label1.Location = New Point(986, 577)
+        Label1.Name = "Label1"
+        Label1.Size = New Size(87, 35)
+        Label1.TabIndex = 40
+        Label1.Text = "Label1"
         ' 
         ' Form4
         ' 
@@ -293,7 +282,6 @@ Partial Class Form4
         BackgroundImage = CType(resources.GetObject("$this.BackgroundImage"), Image)
         BackgroundImageLayout = ImageLayout.Zoom
         ClientSize = New Size(1606, 857)
-        Controls.Add(Button16)
         Controls.Add(Button15)
         Controls.Add(Button14)
         Controls.Add(Button13)
@@ -317,7 +305,7 @@ Partial Class Form4
         Controls.Add(Button11)
         Controls.Add(Button12)
         Name = "Form4"
-        Text = "Form4"
+        Text = "Build-Your-Own-Dessert"
         CType(NumericUpDown1, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
         PerformLayout()
@@ -339,11 +327,10 @@ Partial Class Form4
     Friend WithEvents CheckedListBox2 As CheckedListBox
     Friend WithEvents CheckedListBox3 As CheckedListBox
     Friend WithEvents CheckedListBox4 As CheckedListBox
-    Friend WithEvents Label1 As Label
     Friend WithEvents Button4 As Button
     Friend WithEvents Button5 As Button
     Friend WithEvents Button13 As Button
     Friend WithEvents Button14 As Button
     Friend WithEvents Button15 As Button
-    Friend WithEvents Button16 As Button
+    Friend WithEvents Label1 As Label
 End Class

@@ -263,7 +263,7 @@ Partial Class Form13
         Controls.Add(Button1)
         Controls.Add(DataGridView1)
         Name = "Form13"
-        Text = "Form13"
+        Text = "Mystery Dashboard"
         CType(DataGridView1, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
         PerformLayout()

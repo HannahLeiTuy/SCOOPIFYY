@@ -138,7 +138,7 @@ Partial Class Form1
         Controls.Add(Button2)
         Controls.Add(Button1)
         Name = "Form1"
-        Text = "Form1"
+        Text = "Homepage"
         ResumeLayout(False)
     End Sub
 

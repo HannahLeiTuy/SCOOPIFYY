@@ -1,8 +1,10 @@
 ﻿Imports MySql.Data.MySqlClient
 Imports iTextSharp.text
 Imports iTextSharp.text.pdf
+Imports iTextSharp.text.pdf.draw
 Imports System.IO
 Imports System.Diagnostics
+Imports System.Collections.Generic
 Imports Microsoft.VisualBasic
 
 Public Class Form3
@@ -13,9 +15,41 @@ Public Class Form3
         Dashboard()
     End Sub
 
+
     Private Sub Form3_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.FormBorderStyle = FormBorderStyle.FixedSingle
+        Me.MaximizeBox = False
+        Me.StartPosition = FormStartPosition.CenterScreen
+
         RefreshData()
         CheckLowStock()
+        CheckAdminAccess()
+    End Sub
+
+    Sub CheckAdminAccess()
+
+        If Form2.LoggedInRole = "Admin" Then
+
+            ComboBox1.Enabled = True
+            Button2.Enabled = True
+            Button3.Enabled = True
+            Button12.Enabled = True
+            Button13.Enabled = True
+            Button14.Enabled = True
+            report.Enabled = True
+
+        Else
+
+            ComboBox1.Enabled = False
+            Button2.Enabled = False
+            Button3.Enabled = False
+            Button12.Enabled = False
+            Button13.Enabled = False
+            Button14.Enabled = False
+            report.Enabled = False
+
+        End If
+
     End Sub
 
     Private Sub DataGridView1_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellClick
@@ -78,18 +112,42 @@ Public Class Form3
     Sub Dashboard()
         Try
             conn.Open()
-            Dim cmd1 As New MySqlCommand("SELECT COUNT(*) FROM inventory", conn)
+
+            Dim cmd1 As New MySqlCommand(
+            "SELECT COUNT(*) FROM inventory", conn)
             Label2.Text = cmd1.ExecuteScalar().ToString()
-            Dim cmd2 As New MySqlCommand("SELECT COUNT(*) FROM inventory WHERE status='In Stock'", conn)
+
+            Dim cmd2 As New MySqlCommand(
+            "SELECT COUNT(*) FROM inventory WHERE status='In Stock'", conn)
             Label3.Text = cmd2.ExecuteScalar().ToString()
-            Dim cmd3 As New MySqlCommand("SELECT COUNT(*) FROM inventory WHERE status='Low Stock'", conn)
+
+            Dim cmd3 As New MySqlCommand(
+            "SELECT COUNT(*) FROM inventory WHERE status='Low Stock'", conn)
             Label4.Text = cmd3.ExecuteScalar().ToString()
-            Dim cmd4 As New MySqlCommand("SELECT IFNULL(SUM(total_amount),0) FROM transactions", conn)
-            Label5.Text = "₱" & cmd4.ExecuteScalar().ToString()
+
+            If Form2.LoggedInRole = "Admin" Then
+
+                Dim cmd4 As New MySqlCommand(
+                "SELECT IFNULL(SUM(total_amount),0) FROM transactions", conn)
+
+                Label5.Text = "₱" & cmd4.ExecuteScalar().ToString()
+
+            Else
+
+                Label5.Text = "ADMIN ONLY"
+
+            End If
+
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+
+            If Form2.LoggedInRole = "Admin" Then
+                MessageBox.Show(ex.Message)
+            End If
+
         Finally
-            If conn.State = ConnectionState.Open Then conn.Close()
+            If conn.State = ConnectionState.Open Then
+                conn.Close()
+            End If
         End Try
     End Sub
 
@@ -121,56 +179,223 @@ Public Class Form3
         MessageBox.Show("Suggested Order : " & suggested & vbCrLf & TextBox1.Text)
     End Sub
 
+    Private ReportAccent As New BaseColor(150, 20, 75)
+    Private ReportGray As New BaseColor(90, 90, 90)
+    Private ReportRowAlt As New BaseColor(245, 245, 247)
+    Private ReportBorder As New BaseColor(215, 215, 215)
+
+    Private Function LoadReportFonts() As Dictionary(Of String, iTextSharp.text.Font)
+        Dim fontsFolder As String = Environment.GetFolderPath(Environment.SpecialFolder.Fonts)
+
+        Dim baseRegular As BaseFont = BaseFont.CreateFont(Path.Combine(fontsFolder, "arial.ttf"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED)
+        Dim baseBold As BaseFont = BaseFont.CreateFont(Path.Combine(fontsFolder, "arialbd.ttf"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED)
+        Dim baseItalic As BaseFont = BaseFont.CreateFont(Path.Combine(fontsFolder, "ariali.ttf"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED)
+
+        Dim black As BaseColor = BaseColor.BLACK
+        Dim white As BaseColor = BaseColor.WHITE
+
+        Dim f As New Dictionary(Of String, iTextSharp.text.Font)
+        f("company") = New iTextSharp.text.Font(baseBold, 20, iTextSharp.text.Font.NORMAL, black)
+        f("tagline") = New iTextSharp.text.Font(baseItalic, 9, iTextSharp.text.Font.NORMAL, ReportGray)
+        f("reportTitle") = New iTextSharp.text.Font(baseBold, 14, iTextSharp.text.Font.NORMAL, ReportAccent)
+        f("meta") = New iTextSharp.text.Font(baseRegular, 9, iTextSharp.text.Font.NORMAL, ReportGray)
+        f("summaryLabel") = New iTextSharp.text.Font(baseBold, 8.5F, iTextSharp.text.Font.NORMAL, white)
+        f("summaryValue") = New iTextSharp.text.Font(baseBold, 13, iTextSharp.text.Font.NORMAL, white)
+        f("tableHeader") = New iTextSharp.text.Font(baseBold, 9.5F, iTextSharp.text.Font.NORMAL, white)
+        f("tableCell") = New iTextSharp.text.Font(baseRegular, 9, iTextSharp.text.Font.NORMAL, black)
+        f("totalLabel") = New iTextSharp.text.Font(baseBold, 11, iTextSharp.text.Font.NORMAL, white)
+        f("totalValue") = New iTextSharp.text.Font(baseBold, 13, iTextSharp.text.Font.NORMAL, white)
+        f("footer") = New iTextSharp.text.Font(baseRegular, 8.5F, iTextSharp.text.Font.NORMAL, ReportGray)
+        f("footerItalic") = New iTextSharp.text.Font(baseItalic, 8, iTextSharp.text.Font.NORMAL, ReportGray)
+        f("normal") = New iTextSharp.text.Font(baseRegular, 9, iTextSharp.text.Font.NORMAL, black)
+        Return f
+    End Function
+
+    Private Sub AddReportLetterhead(doc As Document, f As Dictionary(Of String, iTextSharp.text.Font), reportTitle As String)
+
+        Dim company As New Paragraph("SCOOPIFY CREAMERY", f("company"))
+        company.Alignment = Element.ALIGN_CENTER
+        doc.Add(company)
+
+        Dim tagline As New Paragraph("Sweet Moments, One Scoop at a Time", f("tagline"))
+        tagline.Alignment = Element.ALIGN_CENTER
+        tagline.SpacingAfter = 6
+        doc.Add(tagline)
+
+        Dim rule As New LineSeparator(1.2F, 100, ReportAccent, Element.ALIGN_CENTER, -2)
+        doc.Add(New Chunk(rule))
+
+        Dim title As New Paragraph(reportTitle, f("reportTitle"))
+        title.Alignment = Element.ALIGN_CENTER
+        title.SpacingBefore = 12
+        title.SpacingAfter = 6
+        doc.Add(title)
+
+        Dim roleText As String = "Staff"
+        Try
+            roleText = Form2.LoggedInRole
+        Catch
+        End Try
+
+        Dim metaTable As New PdfPTable(2)
+        metaTable.WidthPercentage = 100
+        metaTable.SetWidths(New Single() {1, 1})
+        metaTable.SpacingBefore = 4
+        metaTable.SpacingAfter = 12
+
+        AddPlainCell(metaTable, "Generated on: " & DateTime.Now.ToString("MMMM dd, yyyy   hh:mm tt"), f("meta"), Element.ALIGN_LEFT)
+        AddPlainCell(metaTable, "Generated by: " & roleText, f("meta"), Element.ALIGN_RIGHT)
+        doc.Add(metaTable)
+    End Sub
+
+    Private Sub AddReportFooter(doc As Document, f As Dictionary(Of String, iTextSharp.text.Font), summaryLine As String)
+
+        doc.Add(New Paragraph(" ", f("normal")) With {.SpacingBefore = 10})
+
+        Dim rule As New LineSeparator(0.8F, 100, ReportAccent, Element.ALIGN_CENTER, -2)
+        doc.Add(New Chunk(rule))
+
+        Dim summary As New Paragraph(summaryLine, f("footer"))
+        summary.SpacingBefore = 6
+        doc.Add(summary)
+
+        Dim confidential As New Paragraph("This is a system-generated report from the Scoopify Inventory Management System. For internal administrative use only.", f("footerItalic"))
+        confidential.SpacingBefore = 3
+        doc.Add(confidential)
+
+        Dim printed As New Paragraph("Printed: " & DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"), f("footerItalic"))
+        printed.SpacingBefore = 2
+        doc.Add(printed)
+    End Sub
+
+    Private Sub AddSummaryRow(doc As Document, f As Dictionary(Of String, iTextSharp.text.Font), labels As String(), values As String())
+        Dim table As New PdfPTable(labels.Length)
+        table.WidthPercentage = 100
+        table.SpacingBefore = 2
+        table.SpacingAfter = 10
+
+        For i = 0 To labels.Length - 1
+            Dim cell As New PdfPCell()
+            cell.BackgroundColor = ReportAccent
+            cell.Border = iTextSharp.text.Rectangle.NO_BORDER
+            cell.PaddingTop = 8
+            cell.PaddingBottom = 8
+            cell.HorizontalAlignment = Element.ALIGN_CENTER
+
+            If i > 0 Then
+                cell.BorderWidthLeft = 0.75F
+                cell.BorderColorLeft = BaseColor.WHITE
+            End If
+
+            Dim lbl As New Paragraph(labels(i), f("summaryLabel"))
+            lbl.Alignment = Element.ALIGN_CENTER
+            cell.AddElement(lbl)
+
+            Dim valPara As New Paragraph(values(i), f("summaryValue"))
+            valPara.Alignment = Element.ALIGN_CENTER
+            valPara.SpacingBefore = 2
+            cell.AddElement(valPara)
+
+            table.AddCell(cell)
+        Next
+        doc.Add(table)
+    End Sub
+
+    Private Sub AddHeaderCell(table As PdfPTable, text As String, font As iTextSharp.text.Font)
+        Dim cell As New PdfPCell(New Phrase(text, font))
+        cell.BackgroundColor = ReportAccent
+        cell.HorizontalAlignment = Element.ALIGN_CENTER
+        cell.VerticalAlignment = Element.ALIGN_MIDDLE
+        cell.Padding = 6
+        cell.Border = iTextSharp.text.Rectangle.NO_BORDER
+        table.AddCell(cell)
+    End Sub
+
+    Private Sub AddBodyCell(table As PdfPTable, text As String, font As iTextSharp.text.Font, bg As BaseColor, alignment As Integer)
+        Dim cell As New PdfPCell(New Phrase(text, font))
+        cell.BackgroundColor = bg
+        cell.HorizontalAlignment = alignment
+        cell.VerticalAlignment = Element.ALIGN_MIDDLE
+        cell.Padding = 5
+        cell.BorderColor = ReportBorder
+        cell.BorderWidth = 0.5F
+        table.AddCell(cell)
+    End Sub
+
+    Private Sub AddPlainCell(table As PdfPTable, text As String, font As iTextSharp.text.Font, alignment As Integer)
+        Dim cell As New PdfPCell(New Phrase(text, font))
+        cell.Border = iTextSharp.text.Rectangle.NO_BORDER
+        cell.HorizontalAlignment = alignment
+        table.AddCell(cell)
+    End Sub
+
     Private Sub report_Click(sender As Object, e As EventArgs) Handles report.Click
+        GenerateInventoryReportPdf()
+    End Sub
+
+    Private Sub GenerateInventoryReportPdf()
         Try
             Dim folderPath As String = Path.Combine(Application.StartupPath, "Reports")
             If Not Directory.Exists(folderPath) Then Directory.CreateDirectory(folderPath)
 
             Dim filePath As String = Path.Combine(folderPath, "Inventory_Report_" & DateTime.Now.ToString("yyyyMMdd_HHmmss") & ".pdf")
 
-            Dim doc As New Document(PageSize.A4, 30, 30, 30, 30)
+            Dim doc As New Document(PageSize.A4, 36, 36, 40, 40)
             PdfWriter.GetInstance(doc, New FileStream(filePath, FileMode.Create))
             doc.Open()
 
-            Dim titleFont As Font = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 22)
-            Dim headerFont As Font = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12)
-            Dim normalFont As Font = FontFactory.GetFont(FontFactory.HELVETICA, 11)
+            Dim f As Dictionary(Of String, iTextSharp.text.Font) = LoadReportFonts()
 
-            Dim title As New Paragraph("🍦 SCOOPIFY CREAMERY 🍦", titleFont)
-            title.Alignment = Element.ALIGN_CENTER
-            doc.Add(title)
+            AddReportLetterhead(doc, f, "INVENTORY STATUS REPORT")
 
-            Dim subtitle As New Paragraph("Inventory Report", headerFont)
-            subtitle.Alignment = Element.ALIGN_CENTER
-            doc.Add(subtitle)
+            Dim items As New List(Of String())
+            Dim totalItems As Integer = 0
+            Dim inStock As Integer = 0
+            Dim lowStock As Integer = 0
+            Dim outStock As Integer = 0
 
-            doc.Add(New Paragraph("Generated on: " & DateTime.Now.ToString("MMMM dd, yyyy hh:mm tt"), normalFont))
-            doc.Add(New Paragraph(" "))
+            conn.Open()
+            Dim cmd As New MySqlCommand("SELECT item_name, category, current_stock, reorder_level, status FROM inventory ORDER BY item_name", conn)
+            Dim reader = cmd.ExecuteReader()
+            While reader.Read()
+                Dim status As String = reader("status").ToString()
+                items.Add({reader("item_name").ToString(), reader("category").ToString(), reader("current_stock").ToString(), reader("reorder_level").ToString(), status})
+                totalItems += 1
+                Select Case status
+                    Case "In Stock" : inStock += 1
+                    Case "Low Stock" : lowStock += 1
+                    Case "Out of Stock" : outStock += 1
+                End Select
+            End While
+            reader.Close()
+            conn.Close()
 
-            Dim pdfTable As New PdfPTable(5)
-            pdfTable.WidthPercentage = 100
-            pdfTable.SetWidths({3, 2, 2, 2, 2})
-            pdfTable.AddCell("Item Name")
-            pdfTable.AddCell("Category")
-            pdfTable.AddCell("Stock")
-            pdfTable.AddCell("Reorder Level")
-            pdfTable.AddCell("Status")
+            AddSummaryRow(doc, f,
+                New String() {"TOTAL ITEMS", "IN STOCK", "LOW STOCK", "OUT OF STOCK"},
+                New String() {totalItems.ToString(), inStock.ToString(), lowStock.ToString(), outStock.ToString()})
 
-            For Each row As DataGridViewRow In DataGridView1.Rows
-                If Not row.IsNewRow Then
-                    pdfTable.AddCell(row.Cells(1).Value.ToString())
-                    pdfTable.AddCell(row.Cells(2).Value.ToString())
-                    pdfTable.AddCell(row.Cells(3).Value.ToString())
-                    pdfTable.AddCell(row.Cells(4).Value.ToString())
-                    pdfTable.AddCell(row.Cells(5).Value.ToString())
-                End If
+            Dim table As New PdfPTable(5)
+            table.WidthPercentage = 100
+            table.SetWidths(New Single() {3, 2, 1.3F, 1.5F, 1.5F})
+
+            For Each h As String In New String() {"Item Name", "Category", "Stock", "Reorder Lvl", "Status"}
+                AddHeaderCell(table, h, f("tableHeader"))
             Next
 
-            doc.Add(pdfTable)
-            doc.Add(New Paragraph(" "))
-            doc.Add(New Paragraph("Total Inventory Items: " & (DataGridView1.Rows.Count - 1), normalFont))
-            doc.Add(New Paragraph(" "))
-            doc.Add(New Paragraph("Generated by Scoopify Inventory Management System", normalFont))
+            Dim rowIdx As Integer = 0
+            For Each row As String() In items
+                Dim bg As BaseColor = If(rowIdx Mod 2 = 0, BaseColor.WHITE, ReportRowAlt)
+                AddBodyCell(table, row(0), f("tableCell"), bg, Element.ALIGN_LEFT)
+                AddBodyCell(table, row(1), f("tableCell"), bg, Element.ALIGN_LEFT)
+                AddBodyCell(table, row(2), f("tableCell"), bg, Element.ALIGN_CENTER)
+                AddBodyCell(table, row(3), f("tableCell"), bg, Element.ALIGN_CENTER)
+                AddBodyCell(table, row(4), f("tableCell"), bg, Element.ALIGN_CENTER)
+                rowIdx += 1
+            Next
+            doc.Add(table)
+
+            AddReportFooter(doc, f, "Total Inventory Items Listed: " & totalItems)
+
             doc.Close()
 
             MessageBox.Show("Inventory report generated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -178,6 +403,8 @@ Public Class Form3
 
         Catch ex As Exception
             MessageBox.Show(ex.Message)
+        Finally
+            If conn.State = ConnectionState.Open Then conn.Close()
         End Try
     End Sub
 
@@ -341,9 +568,9 @@ Public Class Form3
 
     Private Sub Button10_Click(sender As Object, e As EventArgs) Handles Button10.Click
         LoadGrid("
-            SELECT flavor_mood.mood_name, products.item_name, flavor_mood.flavor_description, flavor_mood.price
-            FROM flavor_mood
-            INNER JOIN products ON flavor_mood.product_id = products.product_id")
+        SELECT flavor_mood.mood_name, products.item_name, flavor_mood.flavor_description, flavor_mood.price
+        FROM flavor_mood
+        INNER JOIN products ON flavor_mood.product_id = products.product_id")
     End Sub
 
     Private Sub Button12_Click(sender As Object, e As EventArgs) Handles Button12.Click
@@ -351,6 +578,97 @@ Public Class Form3
             SELECT transaction_id, transaction_date, total_amount, payment_method
             FROM transactions
             ORDER BY transaction_date DESC")
+
+        GenerateTransactionReportPdf()
+    End Sub
+
+    Private Sub GenerateTransactionReportPdf()
+        Try
+            Dim folderPath As String = Path.Combine(Application.StartupPath, "Reports")
+            If Not Directory.Exists(folderPath) Then Directory.CreateDirectory(folderPath)
+
+            Dim filePath As String = Path.Combine(folderPath, "Transaction_Report_" & DateTime.Now.ToString("yyyyMMdd_HHmmss") & ".pdf")
+
+            Dim doc As New Document(PageSize.A4, 36, 36, 40, 40)
+            PdfWriter.GetInstance(doc, New FileStream(filePath, FileMode.Create))
+            doc.Open()
+
+            Dim f As Dictionary(Of String, iTextSharp.text.Font) = LoadReportFonts()
+            AddReportLetterhead(doc, f, "TRANSACTION REPORT")
+
+            Dim table As New PdfPTable(4)
+            table.WidthPercentage = 100
+            table.SetWidths(New Single() {1, 2, 1.5F, 1.5F})
+
+            For Each h As String In New String() {"ID", "Date", "Total Amount", "Payment Method"}
+                AddHeaderCell(table, h, f("tableHeader"))
+            Next
+
+            Dim totalAmount As Decimal = 0
+            Dim rowIdx As Integer = 0
+
+            conn.Open()
+            Dim cmd As New MySqlCommand("
+                SELECT transaction_id, transaction_date, total_amount, payment_method
+                FROM transactions
+                ORDER BY transaction_date DESC", conn)
+
+            Dim reader = cmd.ExecuteReader()
+            While reader.Read()
+                Dim bg As BaseColor = If(rowIdx Mod 2 = 0, BaseColor.WHITE, ReportRowAlt)
+                Dim amt As Decimal = CDec(reader("total_amount"))
+                totalAmount += amt
+
+                AddBodyCell(table, reader("transaction_id").ToString(), f("tableCell"), bg, Element.ALIGN_CENTER)
+                AddBodyCell(table, CDate(reader("transaction_date")).ToString("MMM dd, yyyy"), f("tableCell"), bg, Element.ALIGN_CENTER)
+                AddBodyCell(table, "₱" & amt.ToString("0.00"), f("tableCell"), bg, Element.ALIGN_RIGHT)
+                AddBodyCell(table, reader("payment_method").ToString(), f("tableCell"), bg, Element.ALIGN_CENTER)
+
+                rowIdx += 1
+            End While
+            reader.Close()
+            conn.Close()
+
+            doc.Add(table)
+
+            Dim totalTable As New PdfPTable(2)
+            totalTable.WidthPercentage = 100
+            totalTable.SetWidths(New Single() {3, 1})
+            totalTable.SpacingBefore = 6
+
+            Dim lblCell As New PdfPCell(New Phrase("TOTAL SALES", f("totalLabel")))
+            lblCell.BackgroundColor = ReportAccent
+            lblCell.Border = iTextSharp.text.Rectangle.NO_BORDER
+            lblCell.PaddingTop = 8
+            lblCell.PaddingBottom = 8
+            lblCell.PaddingLeft = 6
+            lblCell.VerticalAlignment = Element.ALIGN_MIDDLE
+            totalTable.AddCell(lblCell)
+
+            Dim valCell As New PdfPCell(New Phrase("₱" & totalAmount.ToString("0.00"), f("totalValue")))
+            valCell.BackgroundColor = ReportAccent
+            valCell.Border = iTextSharp.text.Rectangle.NO_BORDER
+            valCell.HorizontalAlignment = Element.ALIGN_RIGHT
+            valCell.PaddingTop = 8
+            valCell.PaddingBottom = 8
+            valCell.PaddingRight = 6
+            valCell.VerticalAlignment = Element.ALIGN_MIDDLE
+            totalTable.AddCell(valCell)
+
+            doc.Add(totalTable)
+
+            AddReportFooter(doc, f, "Total Transactions Listed: " & rowIdx)
+
+            doc.Close()
+
+            MessageBox.Show("Transaction Report Generated!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Process.Start("explorer.exe", folderPath)
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        Finally
+            If conn.State = ConnectionState.Open Then conn.Close()
+        End Try
     End Sub
 
     Sub CheckLowStock()
@@ -476,26 +794,34 @@ Public Class Form3
     End Sub
 
     Private Sub Expense_Click(sender As Object, e As EventArgs) Handles Expense.Click
+        GenerateExpenseReportPdf()
+    End Sub
+
+    Private Sub GenerateExpenseReportPdf()
         Try
             Dim folderPath As String = Path.Combine(Application.StartupPath, "Reports")
             If Not Directory.Exists(folderPath) Then Directory.CreateDirectory(folderPath)
 
             Dim filePath As String = Path.Combine(folderPath, "Expense_Report_" & DateTime.Now.ToString("yyyyMMdd_HHmmss") & ".pdf")
 
-            Dim doc As New Document(PageSize.A4)
+            Dim doc As New Document(PageSize.A4, 36, 36, 40, 40)
             PdfWriter.GetInstance(doc, New FileStream(filePath, FileMode.Create))
             doc.Open()
 
-            doc.Add(New Paragraph("SCOOPIFY CREAMERY"))
-            doc.Add(New Paragraph("Expense Report"))
-            doc.Add(New Paragraph(Date.Now.ToString()))
-            doc.Add(New Paragraph(" "))
+            Dim f As Dictionary(Of String, iTextSharp.text.Font) = LoadReportFonts()
+
+            AddReportLetterhead(doc, f, "EXPENSE REPORT")
 
             Dim table As New PdfPTable(4)
-            table.AddCell("Expense ID")
-            table.AddCell("Description")
-            table.AddCell("Amount")
-            table.AddCell("Expense Date")
+            table.WidthPercentage = 100
+            table.SetWidths(New Single() {1, 3.5F, 1.5F, 1.5F})
+
+            For Each h As String In New String() {"ID", "Description", "Amount", "Date"}
+                AddHeaderCell(table, h, f("tableHeader"))
+            Next
+
+            Dim totalAmount As Decimal = 0
+            Dim rowIdx As Integer = 0
 
             conn.Open()
             Dim cmd As New MySqlCommand("
@@ -505,17 +831,53 @@ Public Class Form3
 
             Dim reader = cmd.ExecuteReader()
             While reader.Read()
-                table.AddCell(reader("expense_id").ToString())
-                table.AddCell(reader("description").ToString())
-                table.AddCell("₱" & reader("amount").ToString())
-                table.AddCell(CDate(reader("expense_date")).ToShortDateString())
+                Dim bg As BaseColor = If(rowIdx Mod 2 = 0, BaseColor.WHITE, ReportRowAlt)
+                Dim amt As Decimal = CDec(reader("amount"))
+                totalAmount += amt
+
+                AddBodyCell(table, reader("expense_id").ToString(), f("tableCell"), bg, Element.ALIGN_CENTER)
+                AddBodyCell(table, reader("description").ToString(), f("tableCell"), bg, Element.ALIGN_LEFT)
+                AddBodyCell(table, "₱" & amt.ToString("0.00"), f("tableCell"), bg, Element.ALIGN_RIGHT)
+                AddBodyCell(table, CDate(reader("expense_date")).ToString("MMM dd, yyyy"), f("tableCell"), bg, Element.ALIGN_CENTER)
+
+                rowIdx += 1
             End While
             reader.Close()
+            conn.Close()
 
             doc.Add(table)
+
+            Dim totalTable As New PdfPTable(2)
+            totalTable.WidthPercentage = 100
+            totalTable.SetWidths(New Single() {3, 1})
+            totalTable.SpacingBefore = 6
+
+            Dim lblCell As New PdfPCell(New Phrase("TOTAL EXPENSES", f("totalLabel")))
+            lblCell.BackgroundColor = ReportAccent
+            lblCell.Border = iTextSharp.text.Rectangle.NO_BORDER
+            lblCell.PaddingTop = 8
+            lblCell.PaddingBottom = 8
+            lblCell.PaddingLeft = 6
+            lblCell.VerticalAlignment = Element.ALIGN_MIDDLE
+            totalTable.AddCell(lblCell)
+
+            Dim valCell As New PdfPCell(New Phrase("₱" & totalAmount.ToString("0.00"), f("totalValue")))
+            valCell.BackgroundColor = ReportAccent
+            valCell.Border = iTextSharp.text.Rectangle.NO_BORDER
+            valCell.HorizontalAlignment = Element.ALIGN_RIGHT
+            valCell.PaddingTop = 8
+            valCell.PaddingBottom = 8
+            valCell.PaddingRight = 6
+            valCell.VerticalAlignment = Element.ALIGN_MIDDLE
+            totalTable.AddCell(valCell)
+
+            doc.Add(totalTable)
+
+            AddReportFooter(doc, f, "Total Expense Entries: " & rowIdx)
+
             doc.Close()
 
-            MessageBox.Show("Expense Report Generated!")
+            MessageBox.Show("Expense Report Generated!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Process.Start("explorer.exe", folderPath)
 
         Catch ex As Exception
@@ -531,11 +893,11 @@ Public Class Form3
 
         Select Case choice
             Case "1"
-                report.PerformClick()
+                GenerateInventoryReportPdf()
             Case "2"
-                Expense.PerformClick()
+                GenerateExpenseReportPdf()
             Case "3"
-                Button12.PerformClick()
+                GenerateTransactionReportPdf()
             Case Else
                 MessageBox.Show("Invalid Choice")
         End Select

@@ -79,4 +79,9 @@
         Me.Hide()
     End Sub
 
+    Private Sub Form11_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.FormBorderStyle = FormBorderStyle.FixedSingle
+        Me.MaximizeBox = False
+        Me.StartPosition = FormStartPosition.CenterScreen
+    End Sub
 End Class

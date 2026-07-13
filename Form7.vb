@@ -3,7 +3,9 @@ Imports MySql.Data.MySqlClient
 Public Class Form7
     Private currentMood As String = ""
     Private orderTotal As Double = 0
-    Dim connString As String = "server=localhost;database=Scoopify_Creamery;user=root;password=Hannah_lei07;"
+    Dim connString As String =
+    "server=localhost;database=Scoopify_Creamery;user=root;password=BugfixMaster#22;"
+
     Private currentFlavors As New List(Of MoodFlavor)
     Public Class MoodFlavor
         Public ProductID As Integer
@@ -288,7 +290,9 @@ Public Class Form7
         Hide()
     End Sub
     Private Sub Form7_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        Me.FormBorderStyle = FormBorderStyle.FixedSingle
+        Me.MaximizeBox = False
+        Me.StartPosition = FormStartPosition.CenterScreen
     End Sub
     Private Sub Button11_Click(sender As Object, e As EventArgs) Handles Button11.Click
         Form10.Show()

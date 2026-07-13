@@ -144,7 +144,7 @@ Partial Class Form10
         Controls.Add(Button10)
         Controls.Add(Button11)
         Name = "Form10"
-        Text = "Form10"
+        Text = "About Us Page"
         ResumeLayout(False)
     End Sub
 

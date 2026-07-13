@@ -441,7 +441,7 @@ Partial Class Form3
         Controls.Add(Button1)
         Controls.Add(DataGridView1)
         Name = "Form3"
-        Text = "Form3"
+        Text = "Dashboard"
         CType(DataGridView1, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
         PerformLayout()
